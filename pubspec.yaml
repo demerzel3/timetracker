@@ -1,0 +1,6 @@
+name: TimeTracker
+description: A sample web application
+dependencies:
+  angular: any
+  bootjack: any
+  browser: any
