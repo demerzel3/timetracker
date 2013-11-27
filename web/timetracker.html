@@ -18,11 +18,12 @@
         <h2>Progetti</h2>
   
         <div class="list-group projects-list">
-          <a ng-repeat="project in ctrl.projects" ng-class="{'active': ctrl.selectedProject == project}" ng-click="ctrl.selectProject(project)" class="list-group-item">{{project.name}}</a>
+          <a ng-repeat="project in ctrl.projects" 
+             ng-class="{'active': ctrl.selectedProject == project}" 
+             ng-click="ctrl.selectProject(project)" class="list-group-item">{{project.name}}</a>
           <a class="list-group-item">
-            Nuovo:<br/> 
-            <input type="text" ng-model="ctrl.newProjectName" />
-            <button type="button" class="btn btn-default" ng-click="ctrl.createNewProject()"> <i class="glyphicon glyphicon-plus"></i> Aggiungi</button>
+            <input id="newProjectInput" type="text" ng-model="ctrl.newProjectName" placeholder="Nuovo Progetto" />
+            <button ng-if="ctrl.newProjectName.length > 0" type="button" class="btn btn-default" ng-click="ctrl.createNewProject()"> <i class="glyphicon glyphicon-plus"></i> Aggiungi</button>
           </a>
         </div>
       </div>
@@ -30,24 +31,57 @@
       <div class="col-md-3" ng-if="ctrl.selectedProject != null">
         <h2>Task</h2>
         <div class="list-group tasks-list">
-          <a ng-repeat="task in ctrl.selectedProject.tasks" ng-class="{'active': ctrl.selectedTask == task}" ng-click="ctrl.selectTask(task)" class="list-group-item">{{task.name}}</a>
+          <a ng-repeat="task in ctrl.selectedProject.tasks" 
+             ng-class="{'active': ctrl.selectedTask == task}" 
+             ng-click="ctrl.selectTask(task)" class="list-group-item"><strong>{{$index+1}})</strong> {{task.name}}</a>
           <a class="list-group-item">
-            <label for="newTaskInput">Nuovo:</label><br/>
-            <input id="newTaskInput" type="text" ng-model="ctrl.newTaskName" />
-            <button type="submit" class="btn btn-default" ng-click="ctrl.createNewTask()"> <i class="glyphicon glyphicon-plus"></i> Aggiungi</button>
+            <input id="newTaskInput" type="text" ng-model="ctrl.newTaskName" placeholder="Nuovo Task" />
+            <button ng-if="ctrl.newTaskName.length > 0" type="submit" class="btn btn-default" ng-click="ctrl.createNewTask()"> <i class="glyphicon glyphicon-plus"></i> Aggiungi</button>
           </a>
         </div>
       </div>
 
       <div class="col-md-6" ng-if="ctrl.selectedTask != null">
         <h2>Ore</h2>
-        <table class="table table-bordered">
+        <table class="table table-striped">
           <thead>
             <tr>
-              <th>Blabla</th>
+              <th>Data/Ora</th>
+              <th>Persona</th>
+              <th>Durata (h)</th>
             </tr>
           </thead>
+          <tbody>
+            <tr ng-repeat="timing in ctrl.selectedTask.timings">
+              <td>{timing.datetime}</td>
+              <td>{timing.user}</td>
+              <td>{timing.duration}</td>
+            </tr>
+            <tr ng-if="ctrl.selectedTask.timings.length == 0">
+              <td colspan="3" style="text-align: center">
+                Non ci sono tracciamenti, usa la form sotto per aggiungerne uno
+              </td>
+            </tr>
+          </tbody>
         </table>
+        
+        <h4>Aggiungi Tracciamento</h4>
+        <form role="form">
+          <div class="form-group form-group-inline">
+            <label for="dateBox">Data</label><br/>
+            <input type="date" class="form-control-inline" id="dateBox">
+            <input type="time" class="form-control-inline">
+          </div>
+          <div class="form-group">
+            <label for="exampleInputPassword1">Password</label>
+            <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
+          </div>
+          <div class="form-group">
+            <label for="exampleInputFile">File input</label>
+            <input type="file" id="exampleInputFile">
+            <p class="help-block">Example block-level help text here.</p>
+          </div>
+        </form>        
       </div>
 
     </div>

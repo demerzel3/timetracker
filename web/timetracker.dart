@@ -4,7 +4,7 @@ import 'package:perf_api/perf_api.dart';
 
 class Timing {
   String user;
-  DateTime date;
+  DateTime datetime;
   double duration;
 }
 
@@ -28,16 +28,16 @@ class Project {
 class IndexController {
 
   List<Project> projects;
-  String newProjectName;
+  String newProjectName = "";
     
   Project selectedProject;
   
-  String newTaskName;
+  String newTaskName = "";
   Task selectedTask;
   
   IndexController(Scope scope, Http http) {
-    print(scope);
-    print(http);
+    //print(scope);
+    //print(http);
     
     Project banco = new Project("Banco Farmaceutico");
     banco.tasks.add(new Task("Velocizzare addVolontario"));
@@ -47,7 +47,6 @@ class IndexController {
   }
   
   createNewProject() {
-    print("new project name: " + newProjectName);
     if (newProjectName.length > 0) {
       projects.add(new Project(newProjectName));
       newProjectName = "";
