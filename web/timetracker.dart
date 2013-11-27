@@ -1,11 +1,27 @@
-import 'dart:html';
+//import 'dart:html';
 import 'package:angular/angular.dart';
-import 'package:perf_api/perf_api.dart';
+import 'package:intl/intl.dart';
+//import 'package:perf_api/perf_api.dart';
 
 class Timing {
+  DateFormat _formatter = new DateFormat('dd/MM/yyyy');
+  
   String user;
-  DateTime datetime;
+  DateTime date; // data (in formato gg/mm/aaaa) a cui si riferisce il lavoro
   double duration;
+  
+  String durationString;
+  
+  Timing() {
+    date = new DateTime.now();
+  }
+    
+  String get formattedDate => _formatter.format(date);
+  set formattedDate(String dateExpr) {
+    if (dateExpr.length == 10) {
+      date = _formatter.parse(dateExpr);
+    }
+  }
 }
 
 class Task {
@@ -35,6 +51,8 @@ class IndexController {
   String newTaskName = "";
   Task selectedTask;
   
+  Timing newTiming = new Timing();
+  
   IndexController(Scope scope, Http http) {
     //print(scope);
     //print(http);
@@ -58,6 +76,11 @@ class IndexController {
       selectedProject.tasks.add(new Task(newTaskName));
       newTaskName = "";
     }
+  }
+  
+  createNewTiming() {
+    selectedTask.timings.add(newTiming);
+    newTiming = new Timing();
   }
   
   selectProject(Project project) {
