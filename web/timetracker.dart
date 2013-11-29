@@ -1,27 +1,16 @@
-//import 'dart:html';
+import 'dart:html' as dom;
+import 'dart:async' as async;
 import 'package:angular/angular.dart';
+import 'package:angular/utils.dart';
 import 'package:intl/intl.dart';
 //import 'package:perf_api/perf_api.dart';
 
 class Timing {
-  DateFormat _formatter = new DateFormat('dd/MM/yyyy');
+  //DateFormat _formatter = new DateFormat('dd/MM/yyyy');
   
   String user;
-  DateTime date; // data (in formato gg/mm/aaaa) a cui si riferisce il lavoro
-  double duration;
-  
-  String durationString;
-  
-  Timing() {
-    date = new DateTime.now();
-  }
-    
-  String get formattedDate => _formatter.format(date);
-  set formattedDate(String dateExpr) {
-    if (dateExpr.length == 10) {
-      date = _formatter.parse(dateExpr);
-    }
-  }
+  DateTime date = new DateTime.now(); // data a cui si riferisce il lavoro
+  Duration duration; // durata del lavoro
 }
 
 class Task {
@@ -36,6 +25,64 @@ class Project {
   List<Task> tasks = new List<Task>();
   
   Project(this.name);
+}
+
+/**
+ * Usage:
+ *
+ *     <input type="date" ng-model="datetime">
+ *
+ * This creates a two way databinding between the expression specified in
+ * ng-model and the input(date) element in the DOM.  If the ng-model value is
+ * `null`, it is treated as equivalent to the empty string for rendering
+ * purposes.
+ */
+@NgDirective(selector: 'input[type=date][ng-model]')
+class DateInputDirective {
+  dom.InputElement inputElement;
+  NgModel ngModel;
+  Scope scope;
+  
+  DateFormat _formatter = new DateFormat('yyyy-MM-dd');
+
+  DateTime _valueToDate(String value) {
+    try {
+      return _formatter.parse(value);
+    } catch (FormatException) {
+      return null;
+    }
+  }
+  
+  String _dateToValue(DateTime date) {
+    if (date == null) {
+      return '';
+    } else {
+      return _formatter.format(date);
+    }
+  }
+  
+  DateInputDirective(dom.Element this.inputElement, NgModel this.ngModel, Scope this.scope) {
+    ngModel.render = (value) {
+      //if (value == null) value = '';
+
+      var currentValue = _valueToDate(inputElement.value);
+      if (value == currentValue) return;
+      //var start = inputElement.selectionStart;
+      //var end = inputElement.selectionEnd;
+      inputElement.value =  _dateToValue(value);
+      //inputElement.selectionStart = start;
+      //inputElement.selectionEnd = end;
+    };
+    inputElement.onChange.listen(relaxFnArgs(processValue));
+    inputElement.onKeyDown.listen((e) => new async.Timer(Duration.ZERO, processValue));
+  }
+
+  processValue() {
+    var value = _valueToDate(inputElement.value);
+    if (value != ngModel.viewValue) {
+      scope.$apply(() => ngModel.viewValue = value);
+    }
+  }
 }
 
 @NgController(
@@ -101,6 +148,7 @@ class IndexController {
 class TimeTrackerModule extends Module {
   TimeTrackerModule() {
     type(IndexController);
+    type(DateInputDirective);
     //type(InlineEditableValue);
     //type(Profiler, implementedBy: Profiler); // comment out to enable profiling
   }
