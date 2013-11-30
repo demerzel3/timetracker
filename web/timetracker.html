@@ -21,8 +21,10 @@
              ng-class="{'active': ctrl.selectedProject == project}" 
              ng-click="ctrl.selectProject(project)" class="list-group-item">{{project.name}}</a>
           <a class="list-group-item">
-            <input id="newProjectInput" type="text" ng-model="ctrl.newProjectName" placeholder="Nuovo Progetto" />
-            <button ng-if="ctrl.newProjectName.length > 0" type="button" class="btn btn-default" ng-click="ctrl.createNewProject()"> <i class="glyphicon glyphicon-plus"></i> Aggiungi</button>
+            <form name="newProjectForm" role="form" ng-submit="ctrl.createNewProject()">
+              <input id="newProjectInput" type="text" ng-model="ctrl.newProjectName" placeholder="Nuovo Progetto" />
+              <button ng-if="ctrl.newProjectName.length > 0" type="button" class="btn btn-default"> <i class="glyphicon glyphicon-plus"></i> Aggiungi</button>
+            </form>
           </a>
         </div>
       </div>
@@ -34,8 +36,10 @@
              ng-class="{'active': ctrl.selectedTask == task}" 
              ng-click="ctrl.selectTask(task)" class="list-group-item"><strong>{{$index+1}})</strong> {{task.name}}</a>
           <a class="list-group-item">
-            <input id="newTaskInput" type="text" ng-model="ctrl.newTaskName" placeholder="Nuovo Task" />
-            <button ng-if="ctrl.newTaskName.length > 0" type="submit" class="btn btn-default" ng-click="ctrl.createNewTask()"> <i class="glyphicon glyphicon-plus"></i> Aggiungi</button>
+            <form name="newTaskForm" role="form" ng-submit="ctrl.createNewTask()">
+              <input id="newTaskInput" type="text" ng-model="ctrl.newTaskName" placeholder="Nuovo Task" />
+              <button ng-if="ctrl.newTaskName.length > 0" type="submit" class="btn btn-default"> <i class="glyphicon glyphicon-plus"></i> Aggiungi</button>
+            </form>
           </a>
         </div>
       </div>
@@ -54,29 +58,28 @@
             <tr ng-repeat="timing in ctrl.selectedTask.timings">
               <td>{{timing.date|date:'dd/MM/yyyy'}}</td>
               <td>{{timing.user}}</td>
-              <td>{{timing.durationString}}</td>
+              <td>{{timing.duration|duration:'hh:mm'}}</td>
             </tr>
             
             <tr>
               <td colspan="3">
-                <form role="form" class="form-inline">
+                <form role="form" class="form-inline" ng-submit="ctrl.createNewTiming()">
                   <div class="form-group">
                     <input type="date" class="form-control" id="dateBox" size="10" 
-                      ng-model="ctrl.newTiming.date">  
+                      ng-model="ctrl.newTiming.date" required>  
                   </div>
                   <div class="form-group">
-                    <select id="userBox" class="form-control" ng-model="ctrl.newTiming.user">
+                    <select id="userBox" class="form-control" ng-model="ctrl.newTiming.user" required>
                       <option disabled selected value="">Scegli...</option>
-                      <option value="davide">Davide</option>
-                      <option value="elisa">Elisa</option>
-                      <option value="gabriele">Gabriele</option>
+                      <option ng-repeat="user in ctrl.users" ng-value="user">{{user.name}}</option>
                     </select>
                   </div>
                   <div class="form-group">
-                    <input type="text" id="durationBox" class="form-control" ng-model="ctrl.newTiming.durationString" placeholder="HH:MM" size="5">
+                    <input type="time" id="durationBox" 
+                      class="form-control" ng-model="ctrl.newTiming.duration" placeholder="HH:MM" size="5" required>
                   </div>
                   <div class="form-group">
-                    <button type="button" ng-click="ctrl.createNewTiming()" class="btn btn-default"><i class="glyphicon glyphicon-plus"></i> Aggiungi</button>
+                    <button type="submit" class="btn btn-default"><i class="glyphicon glyphicon-plus"></i> Aggiungi</button>
                   </div>          
                 </form>        
               </td>
@@ -84,7 +87,7 @@
             
           </tbody>
         </table>   
-        {{ctrl.newTiming.date}}     
+        date: {{ctrl.newTiming.date}}, duration: {{ctrl.newTiming.duration}}, user: {{ctrl.newTiming.user}}
       </div>
 
     </div>

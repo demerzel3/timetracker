@@ -1,6 +1,9 @@
 name: TimeTracker
 description: A sample web application
 dependencies:
-  angular: any
+  angular:
+    git:
+      ref: master
+      url: https://github.com/angular/angular.dart
   bootjack: any
   browser: any
