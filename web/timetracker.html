@@ -57,7 +57,7 @@
           <tbody>
             <tr ng-repeat="timing in ctrl.selectedTask.timings">
               <td>{{timing.date|date:'dd/MM/yyyy'}}</td>
-              <td>{{timing.user}}</td>
+              <td>{{timing.user.name}}</td>
               <td>{{timing.duration|duration:'hh:mm'}}</td>
             </tr>
             

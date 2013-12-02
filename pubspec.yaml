@@ -7,3 +7,4 @@ dependencies:
       url: https://github.com/angular/angular.dart
   bootjack: any
   browser: any
+  serialization: any

@@ -5,6 +5,8 @@ part of timetracker;
     publishAs: 'ctrl')
 class IndexController {
 
+  CouchDbDatabase _db;
+  
   List<User> users = User.defaultUsers();
   
   List<Project> projects;
@@ -17,7 +19,9 @@ class IndexController {
   
   Timing newTiming = new Timing();
   
-  IndexController(Scope scope, Http http) {
+  IndexController(this._db, Scope scope, Http http, Serialization serialization) {
+    //print(_db);
+    //_db.getAll();
     //print(scope);
     //print(http);
     
@@ -28,6 +32,13 @@ class IndexController {
     
     projects = new List<Project>();
     projects.add(banco);
+    
+    var format = new SimpleJsonFormat();
+    var json = serialization.write(banco, format: format); 
+    print(json);
+    //var reader = new Reader(serialization, format);
+    var deser = serialization.read(json, format: format);
+    print(deser);
   }
   
   createNewProject() {
