@@ -5,7 +5,7 @@ part of timetracker;
     publishAs: 'ctrl')
 class IndexController {
 
-  CouchDbDatabase _db;
+  ProjectsClient _db;
   
   List<User> users = User.defaultUsers();
   
@@ -19,7 +19,7 @@ class IndexController {
   
   Timing newTiming = new Timing();
   
-  IndexController(this._db, Scope scope, Http http, Serialization serialization) {
+  IndexController(this._db, Scope scope, Http http) {
     //print(_db);
     //_db.getAll();
     //print(scope);
@@ -27,32 +27,39 @@ class IndexController {
     
     //newTiming.duration = new Duration(hours: 3, minutes: 45);
     
+    
+    /*
     Project banco = new Project("Banco Farmaceutico");
-    banco.tasks.add(new Task("Velocizzare addVolontario"));
+    banco.tasks.add(new Task("123", "Velocizzare addVolontario"));
     
     projects = new List<Project>();
     projects.add(banco);
+    */
     
-    var format = new SimpleJsonFormat();
-    var json = serialization.write(banco, format: format); 
-    print(json);
-    //var reader = new Reader(serialization, format);
-    var deser = serialization.read(json, format: format);
-    print(deser);
+    _db.getAll().then((List<Project> loadedProjects) {      
+      projects = new List<Project>.from(loadedProjects, growable: true);
+    });
   }
   
   createNewProject() {
     if (newProjectName.length > 0) {
-      projects.add(new Project(newProjectName));
-      newProjectName = "";
+      var project = new Project(newProjectName);
+      _db.post(project).then((Project project) {
+        projects.add(project);  
+        newProjectName = "";
+      });
     }
   }
   
   createNewTask() {
-    if (newTaskName.length > 0) {
-      selectedProject.tasks.add(new Task(newTaskName));
-      newTaskName = "";
+    if (newTaskName.length == 0) {
+      return;
     }
+    _db.generateUuid().then((String uuid) {
+      selectedProject.tasks.add(new Task(uuid, newTaskName));        
+      _db.put(selectedProject);
+      newTaskName = "";
+    });
   }
   
   createNewTiming() {
@@ -67,6 +74,15 @@ class IndexController {
     } else {
       selectedTask = null;
     }
+  }
+  
+  deleteTask(Task task) {
+    // move task from actual tasks to deleted tasks
+    selectedProject.tasks.remove(task);
+    selectedProject.deletedTasks.add(task);
+    
+    // save the project
+    _db.put(selectedProject);
   }
   
   selectTask(Task task) {

@@ -2,3 +2,13 @@
 packages
 .project
 pubspec.lock
+
+/web/bower_components/
+
+*.dart.js
+
+*.dart.js.deps
+
+*.dart.js.map
+
+*.dart.precompiled.js

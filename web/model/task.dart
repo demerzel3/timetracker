@@ -1,16 +1,17 @@
 part of timetracker;
 
 class Task {
+  String id;
   String name;
   List<Timing> timings = new List<Timing>();
   
-  Task(this.name);
+  Task(this.id, this.name);
   
-  Task.fromRawData(raw) {
+  Task.fromJson(raw) {
+    id = raw['id'];
     name = raw['name'];
     if (raw['timings'] != null) {
-      List rawTimings = raw['timings']; 
-      timings = rawTimings.map((rawTiming) => new Timing.fromRawData(rawTiming));
+      timings = new List<Timing>.from(raw['timings'].map((rawTiming) => new Timing.fromRawData(rawTiming)));
     }
   }
 }

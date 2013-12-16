@@ -5,6 +5,7 @@
 <meta charset="utf-8">
 <title>TimeTracker</title>
 <link rel="stylesheet" href="packages/bootjack/css/bootstrap.min.css">
+<link rel="stylesheet" href="bower_components/font-awesome/css/font-awesome.min.css">
 </head>
 <body>
   <div class="container">
@@ -23,7 +24,7 @@
           <a class="list-group-item">
             <form name="newProjectForm" role="form" ng-submit="ctrl.createNewProject()">
               <input id="newProjectInput" type="text" ng-model="ctrl.newProjectName" placeholder="Nuovo Progetto" />
-              <button ng-if="ctrl.newProjectName.length > 0" type="button" class="btn btn-default"> <i class="glyphicon glyphicon-plus"></i> Aggiungi</button>
+              <button ng-if="ctrl.newProjectName.length > 0" type="submit" class="btn btn-default"> <i class="fa fa-plus"></i> Aggiungi</button>
             </form>
           </a>
         </div>
@@ -34,14 +35,18 @@
         <div class="list-group tasks-list">
           <a ng-repeat="task in ctrl.selectedProject.tasks" 
              ng-class="{'active': ctrl.selectedTask == task}" 
-             ng-click="ctrl.selectTask(task)" class="list-group-item"><strong>{{$index+1}})</strong> {{task.name}}</a>
+             ng-click="ctrl.selectTask(task)" class="list-group-item">
+             <strong>{{$index+1}})</strong> {{task.name}}
+             <button class="btn btn-default btn-xs" style="float: right" ng-click="ctrl.deleteTask(task)"><i class="fa fa-times"></i></button>
+          </a>
           <a class="list-group-item">
             <form name="newTaskForm" role="form" ng-submit="ctrl.createNewTask()">
               <input id="newTaskInput" type="text" ng-model="ctrl.newTaskName" placeholder="Nuovo Task" />
-              <button ng-if="ctrl.newTaskName.length > 0" type="submit" class="btn btn-default"> <i class="glyphicon glyphicon-plus"></i> Aggiungi</button>
+              <button ng-if="ctrl.newTaskName.length > 0" type="submit" class="btn btn-default"> <i class="fa fa-plus"></i> Aggiungi</button>
             </form>
           </a>
         </div>
+        <i class="fa fa-trash-o"></i> {{ctrl.selectedProject.deletedTasks.length}} deleted tasks
       </div>
 
       <div class="col-md-6" ng-if="ctrl.selectedTask != null">
@@ -79,7 +84,7 @@
                       class="form-control" ng-model="ctrl.newTiming.duration" placeholder="HH:MM" size="5" required>
                   </div>
                   <div class="form-group">
-                    <button type="submit" class="btn btn-default"><i class="glyphicon glyphicon-plus"></i> Aggiungi</button>
+                    <button type="submit" class="btn btn-default"><i class="fa fa-plus"></i> Aggiungi</button>
                   </div>          
                 </form>        
               </td>

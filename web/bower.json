@@ -1,0 +1,27 @@
+{
+  "name": "TimeTracker",
+  "version": "0.0.1",
+  "homepage": "https://github.com/demerzel3/timetracker",
+  "authors": [
+    "Gabriele Genta <gabriele.genta@gmail.com>"
+  ],
+  "description": "A simple time-tracker in Dart and CouchDB",
+  "main": "timetracker.html",
+  "keywords": [
+    "dart",
+    "couchdb",
+    "timetracker"
+  ],
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "font-awesome": "~4.0.3"
+  }
+}
