@@ -11,7 +11,7 @@ class Task {
     id = raw['id'];
     name = raw['name'];
     if (raw['timings'] != null) {
-      timings = new List<Timing>.from(raw['timings'].map((rawTiming) => new Timing.fromRawData(rawTiming)));
+      timings = new List<Timing>.from(raw['timings'].map((rawTiming) => new Timing.fromJson(rawTiming)));
     }
   }
   

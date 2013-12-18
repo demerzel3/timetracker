@@ -59,14 +59,18 @@ class IndexController {
     }
     _db.generateUuid().then((String uuid) {
       selectedProject.tasks.add(new Task(uuid, newTaskName));        
-      _db.put(selectedProject);
+      _saveProject();
       newTaskName = "";
     });
   }
   
   createNewTiming() {
-    selectedTask.timings.add(newTiming);
-    newTiming = new Timing();
+    _db.generateUuid().then((String uuid) {
+      newTiming.id = uuid;
+      selectedTask.timings.add(newTiming);
+      _saveProject();
+      newTiming = new Timing();
+    });
   }
   
   selectProject(Project project) {
@@ -84,7 +88,7 @@ class IndexController {
     selectedProject.deletedTasks.add(task);
     
     // save the project
-    _db.put(selectedProject);
+    _saveProject();
 
     // fix to the incorrect selection of task after deletion
     // due to nested ng-clicks, this can probably be avoided
@@ -109,7 +113,7 @@ class IndexController {
     }
     
     selectedProject.deletedTasks.clear();
-    _db.put(selectedProject);
+    _saveProject();
   }
   
   selectTask(Task task) {
@@ -119,5 +123,12 @@ class IndexController {
   debug() {
     print("sticazzi");
   }
+
+  _saveProject() {
+    _save(selectedProject);
+  }
   
+  _save(Project project) {
+    _db.put(project);
+  }  
 }
