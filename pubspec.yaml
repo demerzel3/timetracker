@@ -1,7 +1,7 @@
 name: TimeTracker
 description: A sample web application
 dependencies:
-  angular: any
+  angular: '>0.9.2'
   bootjack: any
   browser: any
   json: any

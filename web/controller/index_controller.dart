@@ -5,6 +5,8 @@ part of timetracker;
     publishAs: 'ctrl')
 class IndexController {
 
+  Scope _scope;
+  
   ProjectsClient _db;
   
   List<User> users = User.defaultUsers();
@@ -19,7 +21,7 @@ class IndexController {
   
   Timing newTiming = new Timing();
   
-  IndexController(this._db, Scope scope, Http http) {
+  IndexController(this._db, this._scope, Http http) {
     //print(_db);
     //_db.getAll();
     //print(scope);
@@ -76,12 +78,37 @@ class IndexController {
     }
   }
   
-  deleteTask(Task task) {
+  deleteTask(Task task) {    
     // move task from actual tasks to deleted tasks
     selectedProject.tasks.remove(task);
     selectedProject.deletedTasks.add(task);
     
     // save the project
+    _db.put(selectedProject);
+
+    // fix to the incorrect selection of task after deletion
+    // due to nested ng-clicks, this can probably be avoided
+    // by removing one level of ng-click
+    // TODO: refactor HTML to avoid this behavior
+    var currentSelectedTask = selectedTask;
+    var me = this;
+    var timer = new async.Timer(new Duration(milliseconds:0), () {
+      _scope.$apply(() {
+        if (currentSelectedTask == task) {
+          me.selectedTask = null;
+        } else {
+          me.selectedTask = currentSelectedTask;
+        }
+      });      
+    });
+  }
+  
+  clearDeletedTasks() {
+    if (!dom.window.confirm("Are you sure?")) {
+      return;
+    }
+    
+    selectedProject.deletedTasks.clear();
     _db.put(selectedProject);
   }
   

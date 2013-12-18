@@ -47,6 +47,7 @@
           </a>
         </div>
         <i class="fa fa-trash-o"></i> {{ctrl.selectedProject.deletedTasks.length}} deleted tasks
+        <button ng-if="ctrl.selectedProject.deletedTasks.length > 0" class="btn btn-default btn-xs" ng-click="ctrl.clearDeletedTasks()">Empty Bin</button>
       </div>
 
       <div class="col-md-6" ng-if="ctrl.selectedTask != null">

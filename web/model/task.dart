@@ -14,4 +14,8 @@ class Task {
       timings = new List<Timing>.from(raw['timings'].map((rawTiming) => new Timing.fromRawData(rawTiming)));
     }
   }
+  
+  toString() {
+    return 'Task[id='+ id +', name:'+ name +']';
+  }
 }
