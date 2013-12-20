@@ -3,6 +3,7 @@ library timetracker;
 //@MirrorsUsed(symbols: const ['name', 'tasks', 'timings', 'id', 'user', 'date', 'duration'], override: '*')
 import 'dart:html' as dom;
 import 'dart:async' as async;
+import 'dart:convert';
 
 /* Should be used to reduce ouput size
 @MirrorsUsed(targets: const[
@@ -20,7 +21,6 @@ import 'dart:async' as async;
   override: '*')
 import 'dart:mirrors';
 */
-import 'package:jsonx/jsonx.dart' as jsonx;
 import 'package:angular/angular.dart';
 import 'package:angular/utils.dart';
 import 'package:intl/intl.dart';

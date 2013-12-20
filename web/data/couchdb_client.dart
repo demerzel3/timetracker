@@ -31,7 +31,7 @@ class CouchDbClient<Model> {
   }
   
   async.Future<Model> post(Model model) {
-    var json = jsonx.encode(model); 
+    var json = JSON.encode(model); 
     return _http.post([_serverUrl, _dbName].join('/'), json).then((HttpResponse response) {
       Map data = response.data;
       if (data['ok'] == true) {
@@ -48,7 +48,7 @@ class CouchDbClient<Model> {
    * Restituisce la versione aggiornata del modello passato come argomento.
    */
   async.Future<Model> put(Model model) {
-    var json = jsonx.encode(model); 
+    var json = JSON.encode(model); 
     return _http.put([_serverUrl, _dbName, model.id].join('/'), json).then((HttpResponse response) {
       Map data = response.data;
       if (data['ok'] == true) {

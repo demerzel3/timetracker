@@ -15,7 +15,15 @@ class Task {
     }
   }
   
-  toString() {
+  Map toJson() {
+    return {
+      'id': id,
+      'name': name,
+      'timings': timings
+    };
+  }
+  
+  String toString() {
     return 'Task[id='+ id +', name:'+ name +']';
   }
 }
