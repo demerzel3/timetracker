@@ -7,12 +7,12 @@
 <link rel="stylesheet" href="packages/bootjack/css/bootstrap.min.css">
 <link rel="stylesheet" href="bower_components/font-awesome/css/font-awesome.min.css">
 </head>
-<body>
+<body index-controller>
   <div class="container">
 
     <h1>TimeTracker</h1>
 
-    <div class="row" index-controller>
+    <div class="row">
 
       <div class="col-md-3">
         <h2>Progetti</h2>
@@ -35,7 +35,7 @@
         <div class="list-group tasks-list">
           <a ng-repeat="task in ctrl.selectedProject.tasks" 
              ng-class="{'active': ctrl.selectedTask == task}" 
-             ng-click="ctrl.selectTask(task)" class="list-group-item">
+             ng-click="ctrl.selectTask(task)" class="list-group-item" draggable="true">
              <strong>{{$index+1}})</strong> {{task.name}}
              <button class="btn btn-default btn-xs" style="float: right" ng-click="ctrl.deleteTask(task)"><i class="fa fa-times"></i></button>
           </a>
@@ -46,8 +46,10 @@
             </form>
           </a>
         </div>
-        <i class="fa fa-trash-o"></i> {{ctrl.selectedProject.deletedTasks.length}} deleted tasks
-        <button ng-if="ctrl.selectedProject.deletedTasks.length > 0" class="btn btn-default btn-xs" ng-click="ctrl.clearDeletedTasks()">Empty Bin</button>
+        <div ng-if="ctrl.selectedProject.deletedTasks.length > 0">
+          <a href="" ng-click="ctrl.showTasksBin()"><i class="fa fa-trash-o"></i> {{ctrl.selectedProject.deletedTasks.length}}</a>
+          <button class="btn btn-default btn-xs" ng-click="ctrl.clearDeletedTasks()">Empty Bin</button>
+        </div>
       </div>
 
       <div class="col-md-6" ng-if="ctrl.selectedTask != null">
@@ -99,6 +101,30 @@
     </div>
 
   </div>
+
+  <!-- Modal -->
+  <div class="modal fade" id="tasksBinModal" tabindex="-1" role="dialog" aria-labelledby="tasksBinModal" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+          <h4 class="modal-title" id="myModalLabel">Deleted Tasks</h4>
+        </div>
+        <div class="modal-body">
+          <ul>
+            <li ng-repeat="task in ctrl.selectedProject.deletedTasks">
+              {{task.name}} <a href="" ng-click="ctrl.restoreTask(task)">Restore</a>
+            </li>
+          </ul>
+        </div>
+        <!--
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+        -->
+      </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+  </div><!-- /.modal -->
 
   <script type="application/dart" src="timetracker.dart"></script>
   <script src="packages/browser/dart.js"></script>

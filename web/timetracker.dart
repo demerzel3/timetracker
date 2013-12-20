@@ -24,6 +24,7 @@ import 'dart:mirrors';
 import 'package:angular/angular.dart';
 import 'package:angular/utils.dart';
 import 'package:intl/intl.dart';
+import 'package:bootjack/bootjack.dart';
 //import 'package:serialization/serialization.dart';
 
 part 'component/input_date_directive.dart';

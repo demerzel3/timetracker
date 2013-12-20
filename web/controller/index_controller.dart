@@ -6,8 +6,8 @@ part of timetracker;
 class IndexController {
 
   Scope _scope;
-  
   ProjectsClient _db;
+  Modal _tasksBinModal;
   
   List<User> users = User.defaultUsers();
   
@@ -41,6 +41,7 @@ class IndexController {
     _db.getAll().then((List<Project> loadedProjects) {      
       projects = new List<Project>.from(loadedProjects, growable: true);
     });
+    _tasksBinModal = Modal.wire(dom.document.querySelector('#tasksBinModal'));
   }
   
   createNewProject() {
@@ -107,6 +108,28 @@ class IndexController {
     });
   }
   
+  showTasksBin() {
+    if (selectedProject.deletedTasks.length > 0) {
+      _tasksBinModal.show();
+    }
+  }
+  
+  /**
+   * Cancels the elimination of the task
+   */
+  restoreTask(Task task) {
+    // move task from deleted tasks to actual tasks
+    selectedProject.deletedTasks.remove(task);
+    selectedProject.tasks.add(task);
+    
+    // save the project
+    _saveProject();
+    
+    if (selectedProject.deletedTasks.length == 0) {
+      _tasksBinModal.hide();
+    }
+  }
+  
   clearDeletedTasks() {
     if (!dom.window.confirm("Are you sure?")) {
       return;
@@ -119,7 +142,7 @@ class IndexController {
   selectTask(Task task) {
     selectedTask = task;
   }
-  
+    
   debug() {
     print("sticazzi");
   }
