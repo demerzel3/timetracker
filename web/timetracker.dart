@@ -4,6 +4,7 @@ library timetracker;
 import 'dart:html' as dom;
 import 'dart:async' as async;
 import 'dart:convert';
+import 'dart:collection';
 
 /* Should be used to reduce ouput size
 @MirrorsUsed(targets: const[

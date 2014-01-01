@@ -11,7 +11,8 @@ class IndexController {
   
   List<User> users = User.defaultUsers();
   
-  List<Project> projects;
+  LinkedHashMap<String, Project> projects;
+  Iterable<Project> projectsList;
   String newProjectName = "";
     
   Project selectedProject;
@@ -38,16 +39,52 @@ class IndexController {
     projects.add(banco);
     */
     
+    /*
     _db.getAll().then((List<Project> loadedProjects) {      
       projects = new List<Project>.from(loadedProjects, growable: true);
     });
+    */
+    projects = new LinkedHashMap<String, Project>();
+    _pollForChanges(); 
+  }
+  
+  _pollForChanges() {
+    _db.pollForChanges().then((List<Project> changedProjects) {
+      // add changed projects to the list of projects
+      // TODO: improve this!
+      changedProjects.forEach((Project project) => _updateProject(project));
+      projectsList = projects.values;
+      
+      // resume polling
+      async.scheduleMicrotask(_pollForChanges);
+    });
+  }
+  
+  /**
+   * Updates a chnaged project in the projects map, preserving selection of project and task.
+   */
+  _updateProject(Project project) {
+    print(project.name + " updated");
+    var wasSelected = (selectedProject != null && projects[project.id] == selectedProject);
+    projects[project.id] = project;
+    if (wasSelected) {
+      selectedProject = project;
+      if (selectedTask != null) {
+        var selectedTaskId = selectedTask.id;
+        selectedTask = null;
+        for (int i = 0; i < project.tasks.length; i++) {
+          if (project.tasks[i].id == selectedTaskId) {
+            selectedTask = project.tasks[i];
+          }
+        }
+      }
+    }
   }
   
   createNewProject() {
     if (newProjectName.length > 0) {
       var project = new Project(newProjectName);
       _db.post(project).then((Project project) {
-        projects.add(project);  
         newProjectName = "";
       });
     }

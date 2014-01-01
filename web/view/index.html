@@ -10,7 +10,7 @@
         <h2>Progetti</h2>
   
         <div class="list-group projects-list">
-          <a ng-repeat="project in ctrl.projects" 
+          <a ng-repeat="project in ctrl.projectsList" 
              ng-class="{'active': ctrl.selectedProject == project}" 
              ng-click="ctrl.selectProject(project)" class="list-group-item">{{project.name}}</a>
           <a class="list-group-item">

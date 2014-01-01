@@ -6,11 +6,16 @@ class CouchDbClient<Model> {
   Http _http;
   String _serverUrl;
   String _dbName;
+  int _lastSeq = 0;
   
   Constructor<Model> _modelConstructor;
   
   CouchDbClient(this._http, this._serverUrl, this._dbName, this._modelConstructor);
-    
+  
+  int get lastSeq {
+    return _lastSeq;
+  }
+  
   async.Future<List<Model>> getAll() {
     return _http.get([_serverUrl, _dbName, '_all_docs'].join('/')).then((HttpResponse response) {
       List rows = response.data['rows'];
@@ -58,6 +63,46 @@ class CouchDbClient<Model> {
       } else {
         print('Something went horribly wrong!');
       }
+    });
+  }
+  
+  /**
+   * Listens for changes to the database using long polling 
+   * and resolves to a list of changed documents. An internal pointer tracks
+   * the last seq in order to retrieve only new changes.
+   * It is possible to force a change in the seq number by specifiying one.
+   * Automathically iterates when the call returns with no results.
+   */
+  async.Future<List<Model>> pollForChanges({int seq: null}) {
+    if (seq == null) {
+      seq = _lastSeq;
+    } else {
+      _lastSeq = seq; // reset lastSeq to the given seq, to deal with the recursive case correctly
+    }
+    var url = [_serverUrl, _dbName, '_changes'].join('/');
+    var params = {
+      'feed': 'longpoll', 
+      'since': seq,
+      'include_docs': true
+    };
+    return _http.get(url, params: params).then((HttpResponse response) {
+      Map data = response.data;
+      List results = data['results'];
+      if (results.length == 0) {
+        // no results, do a recursion
+        return pollForChanges();
+      }
+      
+      _lastSeq = data['last_seq'];
+      List<Model> models = new List<Model>();
+      results.forEach((Map change) {
+        // ignore deleted documents
+        if (change['deleted'] == true) {
+          return;
+        }
+        models.add(_modelConstructor(change['doc']));
+      });
+      return models;
     });
   }
   
