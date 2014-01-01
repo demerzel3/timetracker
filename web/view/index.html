@@ -1,0 +1,121 @@
+<div index-controller>
+
+  <div class="container">
+  
+    <h1>TimeTracker</h1>
+  
+    <div class="row">
+  
+      <div class="col-md-3">
+        <h2>Progetti</h2>
+  
+        <div class="list-group projects-list">
+          <a ng-repeat="project in ctrl.projects" 
+             ng-class="{'active': ctrl.selectedProject == project}" 
+             ng-click="ctrl.selectProject(project)" class="list-group-item">{{project.name}}</a>
+          <a class="list-group-item">
+            <form name="newProjectForm" role="form" ng-submit="ctrl.createNewProject()">
+              <input id="newProjectInput" type="text" ng-model="ctrl.newProjectName" placeholder="Nuovo Progetto" />
+              <button ng-if="ctrl.newProjectName.length > 0" type="submit" class="btn btn-default"> <i class="fa fa-plus"></i> Aggiungi</button>
+            </form>
+          </a>
+        </div>
+      </div>
+      
+      <div class="col-md-3" ng-if="ctrl.selectedProject != null">
+        <h2>Task</h2>
+        <div class="list-group tasks-list">
+          <a ng-repeat="task in ctrl.selectedProject.tasks" 
+             ng-class="{'active': ctrl.selectedTask == task}" 
+             ng-click="ctrl.selectTask(task)" class="list-group-item" draggable="true">
+             <strong>{{$index+1}})</strong> {{task.name}}
+             <button class="btn btn-default btn-xs" style="float: right" ng-click="ctrl.deleteTask(task)"><i class="fa fa-times"></i></button>
+          </a>
+          <a class="list-group-item">
+            <form name="newTaskForm" role="form" ng-submit="ctrl.createNewTask()">
+              <input id="newTaskInput" type="text" ng-model="ctrl.newTaskName" placeholder="Nuovo Task" />
+              <button ng-if="ctrl.newTaskName.length > 0" type="submit" class="btn btn-default"> <i class="fa fa-plus"></i> Aggiungi</button>
+            </form>
+          </a>
+        </div>
+        <div ng-if="ctrl.selectedProject.deletedTasks.length > 0">
+          <a href="" ng-click="ctrl.showTasksBin()"><i class="fa fa-trash-o"></i> {{ctrl.selectedProject.deletedTasks.length}}</a>
+          <button class="btn btn-default btn-xs" ng-click="ctrl.clearDeletedTasks()">Empty Bin</button>
+        </div>
+      </div>
+  
+      <div class="col-md-6" ng-if="ctrl.selectedTask != null">
+        <h2>Ore</h2>
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th>Data</th>
+              <th>Persona</th>
+              <th>Durata (h)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr ng-repeat="timing in ctrl.selectedTask.timings">
+              <td>{{timing.date|date:'dd/MM/yyyy'}}</td>
+              <td>{{timing.user.name}}</td>
+              <td>{{timing.duration|duration:'hh:mm'}}</td>
+            </tr>
+            
+            <tr>
+              <td colspan="3">
+                <form role="form" class="form-inline" ng-submit="ctrl.createNewTiming()">
+                  <div class="form-group">
+                    <input type="date" class="form-control" id="dateBox" size="10" 
+                      ng-model="ctrl.newTiming.date" required>  
+                  </div>
+                  <div class="form-group">
+                    <select id="userBox" class="form-control" ng-model="ctrl.newTiming.user" required>
+                      <option disabled selected value="">Scegli...</option>
+                      <option ng-repeat="user in ctrl.users" ng-value="user">{{user.name}}</option>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <input type="time" id="durationBox" 
+                      class="form-control" ng-model="ctrl.newTiming.duration" placeholder="HH:MM" size="5" required>
+                  </div>
+                  <div class="form-group">
+                    <button type="submit" class="btn btn-default"><i class="fa fa-plus"></i> Aggiungi</button>
+                  </div>          
+                </form>        
+              </td>
+            </tr>
+            
+          </tbody>
+        </table>   
+        date: {{ctrl.newTiming.date}}, duration: {{ctrl.newTiming.duration}}, user: {{ctrl.newTiming.user}}
+      </div>
+  
+    </div>
+  
+  </div>
+  
+  <!-- Modal -->
+  <div class="modal fade" id="tasksBinModal" tabindex="-1" role="dialog" aria-labelledby="tasksBinModal" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+          <h4 class="modal-title" id="myModalLabel">Deleted Tasks</h4>
+        </div>
+        <div class="modal-body">
+          <ul>
+            <li ng-repeat="task in ctrl.selectedProject.deletedTasks">
+              {{task.name}} <a href="" ng-click="ctrl.restoreTask(task)">Restore</a>
+            </li>
+          </ul>
+        </div>
+        <!--
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+        -->
+      </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+  </div><!-- /.modal -->
+
+</div>

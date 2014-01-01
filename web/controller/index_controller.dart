@@ -41,7 +41,6 @@ class IndexController {
     _db.getAll().then((List<Project> loadedProjects) {      
       projects = new List<Project>.from(loadedProjects, growable: true);
     });
-    _tasksBinModal = Modal.wire(dom.document.querySelector('#tasksBinModal'));
   }
   
   createNewProject() {
@@ -110,6 +109,9 @@ class IndexController {
   
   showTasksBin() {
     if (selectedProject.deletedTasks.length > 0) {
+      if (_tasksBinModal == null) {
+        _tasksBinModal = Modal.wire(dom.document.querySelector('#tasksBinModal'));
+      }
       _tasksBinModal.show();
     }
   }
