@@ -53,7 +53,9 @@ class TimeTrackerModule extends Module {
     type(DurationFilter);
     
     factory(ProjectsClient, (Injector injector) {
-      return new ProjectsClient(injector.get(Http), 'http://127.0.0.1:5984');
+      //return new ProjectsClient(injector.get(Http), 'http://127.0.0.1:5984');
+      // http://192.168.230.230/
+      return new ProjectsClient(injector.get(Http), 'http://192.168.230.230:5984');
     });
 
     /*

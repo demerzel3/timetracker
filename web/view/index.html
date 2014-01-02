@@ -10,33 +10,38 @@
         <h2>Progetti</h2>
   
         <div class="list-group projects-list">
-          <a ng-repeat="project in ctrl.projectsList" 
+          <div ng-repeat="project in ctrl.projectsList" 
              ng-class="{'active': ctrl.selectedProject == project}" 
-             ng-click="ctrl.selectProject(project)" class="list-group-item">{{project.name}}</a>
-          <a class="list-group-item">
+             ng-click="ctrl.selectProject(project)" class="list-group-item">
+            {{project.name}}
+          </div>
+          <div class="list-group-item">
             <form name="newProjectForm" role="form" ng-submit="ctrl.createNewProject()">
               <input id="newProjectInput" type="text" ng-model="ctrl.newProjectName" placeholder="Nuovo Progetto" />
               <button ng-if="ctrl.newProjectName.length > 0" type="submit" class="btn btn-default"> <i class="fa fa-plus"></i> Aggiungi</button>
             </form>
-          </a>
+          </div>
         </div>
       </div>
       
       <div class="col-md-3" ng-if="ctrl.selectedProject != null">
         <h2>Task</h2>
         <div class="list-group tasks-list">
-          <a ng-repeat="task in ctrl.selectedProject.tasks" 
+          <div ng-repeat="task in ctrl.selectedProject.tasks" 
              ng-class="{'active': ctrl.selectedTask == task}" 
              ng-click="ctrl.selectTask(task)" class="list-group-item" draggable="true">
-             <strong>{{$index+1}})</strong> {{task.name}}
-             <button class="btn btn-default btn-xs" style="float: right" ng-click="ctrl.deleteTask(task)"><i class="fa fa-times"></i></button>
-          </a>
-          <a class="list-group-item">
+            <strong>{{$index+1}})</strong> {{task.name}}
+            <div nf-if="ctrl.selectedTask == task" style="float: right">
+              <a href="" style="color: white"><i class="fa fa-pencil"></i></a>
+              <a href="" style="color: white" ng-click="ctrl.deleteTask(task)"><i class="fa fa-times"></i></a>
+            </div>
+          </div>
+          <div class="list-group-item">
             <form name="newTaskForm" role="form" ng-submit="ctrl.createNewTask()">
               <input id="newTaskInput" type="text" ng-model="ctrl.newTaskName" placeholder="Nuovo Task" />
               <button ng-if="ctrl.newTaskName.length > 0" type="submit" class="btn btn-default"> <i class="fa fa-plus"></i> Aggiungi</button>
             </form>
-          </a>
+          </div>
         </div>
         <div ng-if="ctrl.selectedProject.deletedTasks.length > 0">
           <a href="" ng-click="ctrl.showTasksBin()"><i class="fa fa-trash-o"></i> {{ctrl.selectedProject.deletedTasks.length}}</a>
