@@ -50,9 +50,11 @@ class ProjectController {
   
   _pollForChanges({int seq: null}) {
     _db.pollForChanges(seq: seq, docIds: [_projectId]).then((List<Project> changedProjects) {
+      // TODO: preserve task selection
       project = changedProjects[0];
       
       // resume polling
+      // TODO: stop polling if scope has been destroyed
       async.scheduleMicrotask(_pollForChanges);
     });
   }

@@ -35,6 +35,7 @@ part 'controller/projects_controller.dart';
 part 'controller/project_controller.dart';
 
 part 'filter/duration_filter.dart';
+part 'filter/floor_filter.dart';
 
 part 'model/project.dart';
 part 'model/task.dart';
@@ -68,6 +69,7 @@ class TimeTrackerModule extends Module {
     type(TimeInputDirective);
     
     type(DurationFilter);
+    type(FloorFilter);
     
     type(RouteInitializer, implementedBy: TTRouteInitializer);
     factory(NgRoutingUsePushState,

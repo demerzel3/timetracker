@@ -3,8 +3,8 @@ part of timetracker;
 class Task {
   String id;
   String name = '';
-  int score;
-  int estimate;
+  double score;
+  double estimate;
   List<Timing> timings = new List<Timing>();
   
   Task();

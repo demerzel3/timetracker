@@ -56,6 +56,7 @@ class ProjectsController {
       projectsList = projects.values;
       
       // resume polling
+      // TODO: stop polling if scope has been destroyed
       async.scheduleMicrotask(_pollForChanges);
     });
   }
