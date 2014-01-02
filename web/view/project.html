@@ -1,23 +1,52 @@
 <div project-controller>
 
-  <div class="row">
+  <div class="row navigation" ng-if="ctrl.project != null">
+    <div class="col-md-4">
+      <a href="#/"><i class="fa fa-angle-left"></i> Projects</a>
+    </div>
+    <div class="col-md-4 text-center">
+      {{ctrl.project.name}}
+    </div>
+  </div>
 
+  <div class="row">
     <div class="col-md-3" ng-if="ctrl.project != null">
-      <h2>Task</h2>
       <div class="list-group tasks-list">
         <div ng-repeat="task in ctrl.project.tasks" 
            ng-class="{'active': ctrl.selectedTask == task}" 
            ng-click="ctrl.selectTask(task)" class="list-group-item" draggable="true">
-          <strong>{{$index+1}})</strong> {{task.name}}
+          <strong>{{$index+1}})</strong> {{task.name}} {{task.estimate}} <span class="badge">{{task.score}}</span>
           <div nf-if="ctrl.selectedTask == task" style="float: right">
             <a href="" style="color: white"><i class="fa fa-pencil"></i></a>
             <a href="" style="color: white" ng-click="ctrl.deleteTask(task)"><i class="fa fa-times"></i></a>
           </div>
         </div>
         <div class="list-group-item">
-          <form name="newTaskForm" role="form" ng-submit="ctrl.createNewTask()">
-            <input id="newTaskInput" type="text" ng-model="ctrl.newTaskName" placeholder="Nuovo Task" />
-            <button ng-if="ctrl.newTaskName.length > 0" type="submit" class="btn btn-default"> <i class="fa fa-plus"></i> Aggiungi</button>
+          <form name="newTaskForm" class="form-horizontal" role="form" ng-submit="ctrl.createNewTask()">
+            <div class="form-group">
+              <div class="col-sm-12">
+                <input id="newTaskInput" class="form-control" type="text" ng-model="ctrl.newTask.name" placeholder="New Task" ng-focus="ctrl.newTaskFormFocus = true" ng-blur="ctrl.newTaskFormFocus = false" />
+              </div>
+            </div>
+            <div ng-if="ctrl.newTaskFormFocus || ctrl.newTask.name.length > 0">
+              <div class="form-group">
+                <label class="col-sm-7 control-label" for="newTaskScoreBox">Score</label>
+                <div class="col-sm-5">
+                  <input type="number" class="form-control" id="newTaskScoreBox" ng-model="ctrl.newTask.score" placeholder="eg 3"/>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="col-sm-7 control-label" for="newTaskEstimateBox">Est. Duration (h)</label>
+                <div class="col-sm-5">
+                  <input type="number" class="form-control" id="newTaskEstimateBox" ng-model="ctrl.newTask.estimate" placeholder="eg 16"/>
+                </div>
+              </div>
+              <div class="form-group">
+                <div class="col-sm-offset-7 col-sm-5">         
+                  <button type="submit" class="btn btn-default"> <i class="fa fa-plus"></i> Add</button>
+                </div>
+              </div>
+            </div>            
           </form>
         </div>
       </div>
@@ -28,7 +57,6 @@
     </div>
 
     <div class="col-md-6" ng-if="ctrl.selectedTask != null">
-      <h2>Ore</h2>
       <table class="table table-striped">
         <thead>
           <tr>

@@ -1,0 +1,17 @@
+h1 {
+  font-size: 1.1em;
+  font-weight: normal;  
+  color: #ffffff;
+  margin: 0;
+}
+
+.header {
+  background-color: #565656;
+  padding: 8px 10px;
+}
+
+.navigation {
+  background-color: #f6f6f6;
+  padding: 8px 10px;
+  margin-bottom: 10px;
+}

@@ -13,12 +13,14 @@ class ProjectController {
   
   Project project;
   
-  String newTaskName = "";
   Task selectedTask;
   
   Timing newTiming = new Timing();
+  Task newTask = new Task();
   
   String _projectId;
+  
+  bool newTaskFormFocus = false;
   
   ProjectController(this._db, this._scope, Http http, RouteProvider routeProvider) {
     _projectId = routeProvider.parameters['projectId'];
@@ -55,44 +57,12 @@ class ProjectController {
     });
   }
   
-  /**
-   * Updates a chnaged project in the projects map, preserving selection of project and task.
-   */
-  _updateProject(Project project) {
-    print(project.name + " updated");
-    var wasSelected = (selectedProject != null && projects[project.id] == selectedProject);
-    projects[project.id] = project;
-    if (wasSelected) {
-      selectedProject = project;
-      if (selectedTask != null) {
-        var selectedTaskId = selectedTask.id;
-        selectedTask = null;
-        for (int i = 0; i < project.tasks.length; i++) {
-          if (project.tasks[i].id == selectedTaskId) {
-            selectedTask = project.tasks[i];
-          }
-        }
-      }
-    }
-  }
-  
-  createNewProject() {
-    if (newProjectName.length > 0) {
-      var project = new Project(newProjectName);
-      _db.post(project).then((Project project) {
-        newProjectName = "";
-      });
-    }
-  }
-  
   createNewTask() {
-    if (newTaskName.length == 0) {
-      return;
-    }
     _db.generateUuid().then((String uuid) {
-      selectedProject.tasks.add(new Task(uuid, newTaskName));        
+      newTask.id = uuid;
+      project.tasks.add(newTask);        
       _saveProject();
-      newTaskName = "";
+      newTask = new Task();
     });
   }
   
@@ -105,19 +75,10 @@ class ProjectController {
     });
   }
   
-  selectProject(Project project) {
-    selectedProject = project;
-    if (project.tasks.length > 0) {
-      selectedTask = project.tasks[0];
-    } else {
-      selectedTask = null;
-    }
-  }
-  
   deleteTask(Task task) {    
     // move task from actual tasks to deleted tasks
-    selectedProject.tasks.remove(task);
-    selectedProject.deletedTasks.add(task);
+    project.tasks.remove(task);
+    project.deletedTasks.add(task);
     
     // save the project
     _saveProject();
@@ -140,7 +101,7 @@ class ProjectController {
   }
   
   showTasksBin() {
-    if (selectedProject.deletedTasks.length > 0) {
+    if (project.deletedTasks.length > 0) {
       if (_tasksBinModal == null) {
         _tasksBinModal = Modal.wire(dom.document.querySelector('#tasksBinModal'));
       }
@@ -153,13 +114,13 @@ class ProjectController {
    */
   restoreTask(Task task) {
     // move task from deleted tasks to actual tasks
-    selectedProject.deletedTasks.remove(task);
-    selectedProject.tasks.add(task);
+    project.deletedTasks.remove(task);
+    project.tasks.add(task);
     
     // save the project
     _saveProject();
     
-    if (selectedProject.deletedTasks.length == 0) {
+    if (project.deletedTasks.length == 0) {
       _tasksBinModal.hide();
     }
   }
@@ -169,7 +130,7 @@ class ProjectController {
       return;
     }
     
-    selectedProject.deletedTasks.clear();
+    project.deletedTasks.clear();
     _saveProject();
   }
   
@@ -182,7 +143,7 @@ class ProjectController {
   }
 
   _saveProject() {
-    _save(selectedProject);
+    _save(project);
   }
   
   _save(Project project) {

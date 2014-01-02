@@ -47,14 +47,14 @@ part 'data/projects_client.dart';
 class TTRouteInitializer implements RouteInitializer {
   void init(Router router, ViewFactory view) {
     router.root
-    ..addRoute(
+      ..addRoute(
+        name: 'projects',
+        defaultRoute: true,
+        enter: view('view/projects.html'))
+      ..addRoute(
         name: 'project',
         path: '/projects/:projectId',
-        enter: view('view/project.html'))
-      ..addRoute(
-          name: 'projects',
-          path: '/',
-          enter: view('view/projects.html'));
+        enter: view('view/project.html'));
       
   }
 }

@@ -2,14 +2,18 @@ part of timetracker;
 
 class Task {
   String id;
-  String name;
+  String name = '';
+  int score;
+  int estimate;
   List<Timing> timings = new List<Timing>();
   
-  Task(this.id, this.name);
+  Task();
   
   Task.fromJson(raw) {
     id = raw['id'];
     name = raw['name'];
+    score = raw['score'];
+    estimate = raw['estimate'];
     if (raw['timings'] != null) {
       timings = new List<Timing>.from(raw['timings'].map((rawTiming) => new Timing.fromJson(rawTiming)));
     }
@@ -19,6 +23,8 @@ class Task {
     return {
       'id': id,
       'name': name,
+      'score': score,
+      'estimate': estimate,
       'timings': timings
     };
   }

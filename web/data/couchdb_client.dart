@@ -87,7 +87,8 @@ class CouchDbClient<Model> {
     };
     
     if (docIds != null) {
-      params['doc_ids'] = docIds;
+      params['filter'] = '_doc_ids';
+      params['doc_ids'] = JSON.encode(docIds);
     }
     
     return _http.get(url, params: params).then((HttpResponse response) {

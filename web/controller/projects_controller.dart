@@ -45,11 +45,11 @@ class ProjectsController {
     });
     */
     projects = new LinkedHashMap<String, Project>();
-    _pollForChanges(); 
+    _pollForChanges(seq: 0); 
   }
   
-  _pollForChanges() {
-    _db.pollForChanges().then((List<Project> changedProjects) {
+  _pollForChanges({int seq: null}) {
+    _db.pollForChanges(seq: seq).then((List<Project> changedProjects) {
       // add changed projects to the list of projects
       // TODO: improve this!
       changedProjects.forEach((Project project) => _updateProject(project));
