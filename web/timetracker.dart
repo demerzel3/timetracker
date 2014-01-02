@@ -31,7 +31,8 @@ import 'package:bootjack/bootjack.dart';
 part 'component/input_date_directive.dart';
 part 'component/input_time_directive.dart';
 
-part 'controller/index_controller.dart';
+part 'controller/projects_controller.dart';
+part 'controller/project_controller.dart';
 
 part 'filter/duration_filter.dart';
 
@@ -43,14 +44,34 @@ part 'model/user.dart';
 part 'data/couchdb_client.dart';
 part 'data/projects_client.dart';
 
+class TTRouteInitializer implements RouteInitializer {
+  void init(Router router, ViewFactory view) {
+    router.root
+    ..addRoute(
+        name: 'project',
+        path: '/projects/:projectId',
+        enter: view('view/project.html'))
+      ..addRoute(
+          name: 'projects',
+          path: '/',
+          enter: view('view/projects.html'));
+      
+  }
+}
+
 class TimeTrackerModule extends Module {
   TimeTrackerModule() {
-    type(IndexController);
+    type(ProjectsController);
+    type(ProjectController);
     
     type(DateInputDirective);
     type(TimeInputDirective);
     
     type(DurationFilter);
+    
+    type(RouteInitializer, implementedBy: TTRouteInitializer);
+    factory(NgRoutingUsePushState,
+        (_) => new NgRoutingUsePushState.value(false));
     
     factory(ProjectsClient, (Injector injector) {
       //return new ProjectsClient(injector.get(Http), 'http://127.0.0.1:5984');

@@ -8,9 +8,12 @@
 <link rel="stylesheet" href="bower_components/font-awesome/css/font-awesome.min.css">
 </head>
 <body>
+  <div class="container">
   
-  <!-- maschera la sintassi di angular fino al termine del caricamento -->
-  <div ng-include="view/index.html"></div>
+    <h1>TimeTracker</h1>
+    <!-- maschera la sintassi di angular fino al termine del caricamento -->
+    <ng-view></ng-view>
+  </div>
 
   <script type="application/dart" src="timetracker.dart"></script>
   <script src="packages/browser/dart.js"></script>

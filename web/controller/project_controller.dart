@@ -1,9 +1,9 @@
 part of timetracker;
 
 @NgController(
-    selector: '[index-controller]',
+    selector: '[project-controller]',
     publishAs: 'ctrl')
-class IndexController {
+class ProjectController {
 
   Scope _scope;
   ProjectsClient _db;
@@ -11,18 +11,17 @@ class IndexController {
   
   List<User> users = User.defaultUsers();
   
-  LinkedHashMap<String, Project> projects;
-  Iterable<Project> projectsList;
-  String newProjectName = "";
-    
-  Project selectedProject;
+  Project project;
   
   String newTaskName = "";
   Task selectedTask;
   
   Timing newTiming = new Timing();
   
-  IndexController(this._db, this._scope, Http http) {
+  String _projectId;
+  
+  ProjectController(this._db, this._scope, Http http, RouteProvider routeProvider) {
+    _projectId = routeProvider.parameters['projectId'];
     //print(_db);
     //_db.getAll();
     //print(scope);
@@ -44,16 +43,12 @@ class IndexController {
       projects = new List<Project>.from(loadedProjects, growable: true);
     });
     */
-    projects = new LinkedHashMap<String, Project>();
-    _pollForChanges(); 
+    _pollForChanges(seq: 0); 
   }
   
-  _pollForChanges() {
-    _db.pollForChanges().then((List<Project> changedProjects) {
-      // add changed projects to the list of projects
-      // TODO: improve this!
-      changedProjects.forEach((Project project) => _updateProject(project));
-      projectsList = projects.values;
+  _pollForChanges({int seq: null}) {
+    _db.pollForChanges(seq: seq, docIds: [_projectId]).then((List<Project> changedProjects) {
+      project = changedProjects[0];
       
       // resume polling
       async.scheduleMicrotask(_pollForChanges);

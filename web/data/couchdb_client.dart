@@ -73,7 +73,7 @@ class CouchDbClient<Model> {
    * It is possible to force a change in the seq number by specifiying one.
    * Automathically iterates when the call returns with no results.
    */
-  async.Future<List<Model>> pollForChanges({int seq: null}) {
+  async.Future<List<Model>> pollForChanges({int seq: null, List docIds: null}) {
     if (seq == null) {
       seq = _lastSeq;
     } else {
@@ -85,6 +85,11 @@ class CouchDbClient<Model> {
       'since': seq,
       'include_docs': true
     };
+    
+    if (docIds != null) {
+      params['doc_ids'] = docIds;
+    }
+    
     return _http.get(url, params: params).then((HttpResponse response) {
       Map data = response.data;
       List results = data['results'];
