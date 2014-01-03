@@ -9,6 +9,13 @@
       &emsp;
       <span class="badge"><i class="fa fa-clock-o"></i>&emsp;{{ctrl.project.totalDuration|duration:'h:mm|&minus;'}} <span ng-if="ctrl.project.totalEstimate != null">/ {{ctrl.project.totalEstimate|floor}}:00</span></span>
     </div>
+    <div class="col-md-4 text-right">
+      <button type="button" class="btn btn-default btn-sm"
+              ng-disabled="ctrl.project.deletedTasks.length == 0"
+              ng-click="ctrl.showTasksBin()">
+        <i class="fa fa-lg fa-trash-o"></i> {{ctrl.project.deletedTasks.length}}
+      </button>    
+    </div>
   </div>
 
   <div class="row">
@@ -21,7 +28,7 @@
           <strong>{{$index+1}})</strong> {{task.name}}
           <span class="actions">
             &emsp;
-            <a href=""><i class="fa fa-pencil"></i></a>
+            <!-- <a href=""><i class="fa fa-pencil"></i></a> editing is just not implemented yet -->
             <a href="" ng-click="ctrl.deleteTask(task)"><i class="fa fa-times"></i></a>
           </span>
           <span class="badge"><i class="fa fa-clock-o"></i>&emsp;{{task.totalDuration|duration:'h:mm|&minus;'}} <span ng-if="task.estimate != null">/ {{task.estimate|floor}}:00</span></span>
@@ -47,10 +54,6 @@
             </div>                        
           </form>
         </div>
-      </div>
-      <div ng-if="ctrl.project.deletedTasks.length > 0">
-        <a href="" ng-click="ctrl.showTasksBin()"><i class="fa fa-trash-o"></i> {{ctrl.project.deletedTasks.length}}</a>
-        <button class="btn btn-default btn-xs" ng-click="ctrl.clearDeletedTasks()">Empty Bin</button>
       </div>
     </div>
 
@@ -112,15 +115,15 @@
         <div class="modal-body">
           <ul>
             <li ng-repeat="task in ctrl.project.deletedTasks">
-              {{task.name}} <a href="" ng-click="ctrl.restoreTask(task)">Restore</a>
+              {{task.name}} <a ng-click="ctrl.restoreTask(task)">Restore</a>
             </li>
           </ul>
         </div>
-        <!--
         <div class="modal-footer">
-          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          <div class="text-center">
+            <a class="btn btn-sm btn-danger" ng-click="ctrl.clearDeletedTasks()">Delete all permanently</a>
+          </div>
         </div>
-        -->
       </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->
   </div><!-- /.modal -->

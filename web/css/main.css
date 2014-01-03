@@ -5,6 +5,14 @@ h1 {
   margin: 0;
 }
 
+a[ng-click] {
+  cursor: pointer;
+}
+
+a.link-sm {
+  font-size: 0.9em;
+}
+
 .header {
   background-color: #565656;
   padding: 8px 10px;
@@ -14,6 +22,7 @@ h1 {
   background-color: #f6f6f6;
   padding: 8px 10px;
   margin-bottom: 10px;
+  line-height: 30px;
 }
 
 .list-group-item.selectable {

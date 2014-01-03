@@ -145,6 +145,7 @@ class ProjectController {
     
     project.deletedTasks.clear();
     _saveProject();
+    _tasksBinModal.hide();
   }
   
   selectTask(Task task) {
