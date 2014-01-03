@@ -88,10 +88,6 @@ a.link-sm {
   -webkit-animation: fadeInOut 1s infinite alternate;
   -moz-animation: fadeInOut 1s infinite alternate;
   -ms-animation: fadeInOut 1s infinite alternate;
-  color: #428bca;
-}
-.list-group-item.active .fa-stack.timer > i.fa-circle {
-  color: white;  
 }
 .fa-stack.timer > i.fa-circle-o {
   opacity: 0.2;

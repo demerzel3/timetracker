@@ -26,27 +26,6 @@ class ProjectController {
   
   ProjectController(this._db, this._loggedUser, this._scope, RouteProvider routeProvider) {
     _projectId = routeProvider.parameters['projectId'];
-    //print(_db);
-    //_db.getAll();
-    //print(scope);
-    //print(http);
-    
-    //newTiming.duration = new Duration(hours: 3, minutes: 45);
-    
-    
-    /*
-    Project banco = new Project("Banco Farmaceutico");
-    banco.tasks.add(new Task("123", "Velocizzare addVolontario"));
-    
-    projects = new List<Project>();
-    projects.add(banco);
-    */
-    
-    /*
-    _db.getAll().then((List<Project> loadedProjects) {      
-      projects = new List<Project>.from(loadedProjects, growable: true);
-    });
-    */
     
     // whenever activeTiming get changed, we start a timer that updates its duration
     _scope.$watch('ctrl.activeTiming', (Timing _activeTiming) {
@@ -120,6 +99,36 @@ class ProjectController {
       
       // TODO: move this out of the controller
       dom.document.querySelector('#newTaskNameBox').focus();
+    });
+  }
+  
+  bool timingFormFocused = false;
+  bool timingFormInputFocused = false;
+  
+  newTimingBoxFocusIn() {
+    timingFormInputFocused = true;
+    timingFormFocused = true;
+    // TODO: move this out of the controller
+    new async.Timer(new Duration(), () {
+      dom.document.querySelector('#dateBox').focus();          
+    });    
+  }
+  
+  timingInputFocusIn() {
+    timingFormInputFocused = true;
+    if (!timingFormFocused) {
+      timingFormFocused = true;
+      print('formFocused = true');
+    }
+  }
+  
+  timingInputFocusOut() {
+    timingFormInputFocused = false;
+    new async.Timer(new Duration(), () {
+      if (!timingFormInputFocused) {
+        timingFormFocused = false;
+        print('formFocused = false');    
+      }
     });
   }
   
