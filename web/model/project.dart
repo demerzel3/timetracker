@@ -44,9 +44,9 @@ class Project {
   /**
    * Finds in its inner structure the only one possible active timing, or returns null.
    */
-  Timing getActiveTiming() {
+  Timing getActiveTiming(User user) {
     for (Task task in tasks) {
-      var taskActiveTiming = task.getActiveTiming();
+      var taskActiveTiming = task.getActiveTiming(user);
       if (taskActiveTiming != null) {
         return taskActiveTiming;
       }

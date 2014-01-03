@@ -26,9 +26,9 @@ class Task {
   /**
    * Finds in its inner structure the only one possible active timing, or returns null.
    */
-  Timing getActiveTiming() {
+  Timing getActiveTiming(User user) {
     for (Timing timing in timings) {
-      if (timing.trackingActive) {
+      if (timing.user == user && timing.trackingActive) {
         return timing;
       }
     }

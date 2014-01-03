@@ -17,4 +17,13 @@ class User {
   String toString() {
     return 'User['+id+']';
   }
+  
+  bool operator ==(other) {
+    if (other is User) {
+      return other.id == id;
+    } else {
+      return false;
+    }
+  }
+  
 }

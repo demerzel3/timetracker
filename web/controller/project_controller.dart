@@ -15,7 +15,9 @@ class ProjectController {
   Project project;
   
   Task selectedTask;
+  // TODO: make this "timings" to account for multiple active timings at once, from different users
   Timing activeTiming;
+  async.Timer durationUpdateTimer;
   
   Timing newTiming = new Timing();
   Task newTask = new Task();
@@ -30,15 +32,22 @@ class ProjectController {
     // whenever activeTiming get changed, we start a timer that updates its duration
     _scope.$watch('ctrl.activeTiming', (Timing _activeTiming) {
       if (_activeTiming == null) {
+        if (durationUpdateTimer != null) {
+          durationUpdateTimer.cancel();
+          durationUpdateTimer = null;
+        }
         return;
       }
-      new async.Timer.periodic(new Duration(seconds: 1), (async.Timer timer) {
-        if (activeTiming == null) {
-          timer.cancel();
-        } else {
-          activeTiming.updateDuration(new DateTime.now());
-        }
+      durationUpdateTimer = new async.Timer.periodic(new Duration(seconds: 1), (async.Timer timer) {
+        _activeTiming.updateDuration(new DateTime.now());
+        //print(_scope.$id + " - tick");
       });
+    });
+    
+    _scope.$on('\$destroy', (ScopeEvent event) {
+      if (identical(event.targetScope, _scope)) {
+        print('TODO: cleanup timers and pending actions');
+      }
     });
     
     _pollForChanges(seq: 0); 
@@ -48,8 +57,8 @@ class ProjectController {
     _db.pollForChanges(seq: seq, docIds: [_projectId]).then((List<Project> changedProjects) {
       project = changedProjects[0];
       
-      // restore activeTiming
-      activeTiming = project.getActiveTiming();
+      // restore activeTiming for the current user
+      activeTiming = project.getActiveTiming(_loggedUser.user);
       
       // preserve selected task
       if (selectedTask != null) {
@@ -138,6 +147,9 @@ class ProjectController {
       selectedTask.timings.add(newTiming);
       _saveProject();
       newTiming = new Timing();
+      
+      // TODO: move this out of the controller
+      dom.document.querySelector('#dateBox').focus();          
     });
   }
   

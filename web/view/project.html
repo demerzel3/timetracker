@@ -95,9 +95,13 @@
         </thead>
         <tbody>
           <tr ng-repeat="timing in ctrl.selectedTask.timings">
-            <td>{{timing.date|date:'dd/MM/yyyy'}}</td>
-            <td>{{timing.user.name}}</td>
-            <td>
+            <td style="width: 33%">
+              {{timing.date|date:'dd/MM/yyyy'}}
+            </td>
+            <td style="width: 33%">
+              {{timing.user.name}}
+            </td>
+            <td style="width: 33%">
               {{timing.duration|duration:'hh:mm'}}
             </td>
             <td class="text-right" style="width: 20px;">
@@ -114,7 +118,7 @@
         <div class="form-group">
           <div ng-if="!ctrl.timingFormFocused" class="col-sm-12">
             <label class="sr-only" for="newTimingBox">Create new timing</label>
-            <input id="newTimingBox" class="form-control" type="text" ng-model="ctrl.newTask.name" placeholder="New Task" 
+            <input id="newTimingBox" class="form-control" type="text" placeholder="New Timing" 
                    ng-focus="ctrl.newTimingBoxFocusIn()"/>
           </div>
           <div ng-if="ctrl.timingFormFocused">
