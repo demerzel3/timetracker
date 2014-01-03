@@ -22,9 +22,13 @@
     <div class="col-md-6" ng-if="ctrl.project != null">
       <div class="list-group tasks-list">
         <div ng-repeat="task in ctrl.project.tasks" 
-           ng-class="{'active': ctrl.selectedTask == task}" 
-           ng-click="ctrl.selectTask(task)"
-           class="list-group-item selectable" draggable="true">
+             ng-class="{'active': ctrl.selectedTask == task}" 
+             ng-click="ctrl.selectTask(task)"
+             class="list-group-item selectable" draggable="true">
+          <span class="fa-stack timer" ng-if="ctrl.activeTiming != null && ctrl.activeTiming.task == task">
+            <i class="fa fa-circle-o fa-stack-1x"></i>
+            <i class="fa fa-circle fa-stack-1x"></i>
+          </span>
           <strong>{{$index+1}})</strong> {{task.name}}
           <span class="actions">
             &emsp;
@@ -58,6 +62,23 @@
     </div>
 
     <div class="col-md-6" ng-if="ctrl.selectedTask != null">
+    
+      <div class="jumbotron jumbotron-timer" ng-if="ctrl.activeTiming == null">
+        <a class="pull-right btn btn-success btn-lg" style="margin-top: 9px" role="button" 
+           ng-click="ctrl.startTimer()">
+          <i class="fa fa-play"></i>&emsp;Start
+        </a>
+        <h1>00:00:00</h1>        
+      </div>
+
+      <div class="jumbotron jumbotron-timer" ng-if="ctrl.activeTiming != null && ctrl.activeTiming.task == ctrl.selectedTask">
+        <a class="pull-right btn btn-danger btn-lg" style="margin-top: 9px" role="button"
+           ng-click="ctrl.stopTimer()">
+          <i class="fa fa-stop"></i>&emsp;Stop
+        </a>
+        <h1>{{ctrl.activeTiming.duration|duration:'hh:mm:ss'}}</h1>
+      </div>
+    
       <table class="table table-striped">
         <thead>
           <tr>
@@ -104,13 +125,13 @@
 
   </div>
   
-  <!-- Modal -->
-  <div class="modal fade" id="tasksBinModal" tabindex="-1" role="dialog" aria-labelledby="tasksBinModal" aria-hidden="true">
+  <!-- tasksBinModal -->
+  <div class="modal fade" id="tasksBinModal" tabindex="-1" role="dialog" aria-labelledby="tasksBinModalTitle" aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
           <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-          <h4 class="modal-title" id="myModalLabel">Deleted Tasks</h4>
+          <h4 class="modal-title" id="tasksBinModalTitle">Deleted Tasks</h4>
         </div>
         <div class="modal-body">
           <ul>

@@ -3,7 +3,7 @@ part of timetracker;
 class Task {
   String id;
   String name = '';
-  double estimate;
+  num estimate;
   List<Timing> timings = new List<Timing>();
   
   Task();
@@ -13,7 +13,7 @@ class Task {
     name = raw['name'];
     estimate = raw['estimate'];
     if (raw['timings'] != null) {
-      timings = new List<Timing>.from(raw['timings'].map((rawTiming) => new Timing.fromJson(rawTiming)));
+      timings = new List<Timing>.from(raw['timings'].map((rawTiming) => new Timing.fromJson(rawTiming)..task = this));
     }
   }
   
@@ -22,6 +22,18 @@ class Task {
     timings.forEach((Timing timing) => total += timing.duration);
     return total;
   }
+  
+  /**
+   * Finds in its inner structure the only one possible active timing, or returns null.
+   */
+  Timing getActiveTiming() {
+    for (Timing timing in timings) {
+      if (timing.trackingActive) {
+        return timing;
+      }
+    }
+    return null;
+  }  
   
   Map toJson() {
     return {

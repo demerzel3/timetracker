@@ -27,8 +27,8 @@ class Project {
     return total;
   }
   
-  double get totalEstimate {
-    double total = null;
+  num get totalEstimate {
+    num total = null;
     tasks.forEach((Task task) {
       if (task.estimate != null) {
         if (total == null) {
@@ -39,6 +39,19 @@ class Project {
       }
     });
     return total;
+  }
+  
+  /**
+   * Finds in its inner structure the only one possible active timing, or returns null.
+   */
+  Timing getActiveTiming() {
+    for (Task task in tasks) {
+      var taskActiveTiming = task.getActiveTiming();
+      if (taskActiveTiming != null) {
+        return taskActiveTiming;
+      }
+    }
+    return null;
   }
   
   /**

@@ -22,6 +22,7 @@ class DurationFilter {
     return format
         .replaceFirst('hh', _formatter2.format(duration.inHours))
         .replaceFirst('h', _formatter.format(duration.inHours))
-        .replaceFirst('mm', _formatter2.format(duration.inMinutes - duration.inHours*Duration.MINUTES_PER_HOUR));    
+        .replaceFirst('mm', _formatter2.format(duration.inMinutes - duration.inHours*Duration.MINUTES_PER_HOUR))
+        .replaceFirst('ss', _formatter2.format(duration.inSeconds - duration.inMinutes*Duration.SECONDS_PER_MINUTE));    
   }
 }

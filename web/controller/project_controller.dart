@@ -6,13 +6,16 @@ part of timetracker;
 class ProjectController {
 
   ProjectsClient _db;
+  LoggedUser _loggedUser;
   Modal _tasksBinModal;
+  Scope _scope;
   
   List<User> users = User.defaultUsers();
   
   Project project;
   
   Task selectedTask;
+  Timing activeTiming;
   
   Timing newTiming = new Timing();
   Task newTask = new Task();
@@ -21,7 +24,7 @@ class ProjectController {
   
   bool newTaskFormFocus = false;
   
-  ProjectController(this._db, Http http, RouteProvider routeProvider) {
+  ProjectController(this._db, this._loggedUser, this._scope, RouteProvider routeProvider) {
     _projectId = routeProvider.parameters['projectId'];
     //print(_db);
     //_db.getAll();
@@ -44,26 +47,68 @@ class ProjectController {
       projects = new List<Project>.from(loadedProjects, growable: true);
     });
     */
+    
+    // whenever activeTiming get changed, we start a timer that updates its duration
+    _scope.$watch('ctrl.activeTiming', (Timing _activeTiming) {
+      if (_activeTiming == null) {
+        return;
+      }
+      new async.Timer.periodic(new Duration(seconds: 1), (async.Timer timer) {
+        if (activeTiming == null) {
+          timer.cancel();
+        } else {
+          activeTiming.updateDuration(new DateTime.now());
+        }
+      });
+    });
+    
     _pollForChanges(seq: 0); 
   }
   
   _pollForChanges({int seq: null}) {
     _db.pollForChanges(seq: seq, docIds: [_projectId]).then((List<Project> changedProjects) {
       project = changedProjects[0];
+      
+      // restore activeTiming
+      activeTiming = project.getActiveTiming();
+      
+      // preserve selected task
       if (selectedTask != null) {
         var selectedTaskId = selectedTask.id;
         selectedTask = null;
-        for (int i = 0; i < project.tasks.length; i++) {
-          if (project.tasks[i].id == selectedTaskId) {
-            selectedTask = project.tasks[i];
+        for (Task task in project.tasks) {
+          if (task.id == selectedTaskId) {
+            selectedTask = task;
           }
         }
-      }      
+      }
       
       // resume polling
       // TODO: stop polling if scope has been destroyed
       async.scheduleMicrotask(_pollForChanges);
     });
+  }
+  
+  startTimer() {
+    var autoTiming = new Timing();
+    autoTiming.trackingActive = true;
+    autoTiming.user = _loggedUser.user;
+    autoTiming.duration = new Duration();
+    autoTiming.task = selectedTask; // set the parent task
+    _db.generateUuid().then((String uuid) {
+      autoTiming.id = uuid;
+      selectedTask.timings.add(autoTiming);
+      _saveProject();
+      
+      activeTiming = autoTiming;
+    });
+  }
+  
+  stopTimer() {
+    activeTiming.updateDuration(new DateTime.now());
+    activeTiming.trackingActive = false;
+    _saveProject();
+    activeTiming = null;
   }
   
   createNewTask() {

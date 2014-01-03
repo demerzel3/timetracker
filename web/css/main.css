@@ -1,3 +1,38 @@
+/* ANIMATIONS */
+@-webkit-keyframes fadeInOut {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+@-moz-keyframes fadeInOut {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+@-o-keyframes fadeInOut {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+@keyframes fadeInOut {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+
 a[ng-click] {
   cursor: pointer;
 }
@@ -42,4 +77,29 @@ a.link-sm {
 }
 .list-group-item.active > .actions > a {
   color: white;
+}
+
+.fa-stack.timer {
+  width: 1em;
+  height: 1em;
+  line-height: 1em;
+}
+.fa-stack.timer > i.fa-circle {
+  -webkit-animation: fadeInOut 1s infinite alternate;
+  -moz-animation: fadeInOut 1s infinite alternate;
+  -ms-animation: fadeInOut 1s infinite alternate;
+  color: #428bca;
+}
+.list-group-item.active .fa-stack.timer > i.fa-circle {
+  color: white;  
+}
+.fa-stack.timer > i.fa-circle-o {
+  opacity: 0.2;
+}
+
+.jumbotron-timer {
+  padding: 30px;
+}
+.jumbotron-timer h1 {
+  margin: 0;
 }
