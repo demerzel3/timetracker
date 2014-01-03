@@ -28,11 +28,14 @@ import 'package:intl/intl.dart';
 import 'package:bootjack/bootjack.dart';
 //import 'package:serialization/serialization.dart';
 
+part 'auth/logged_user.dart';
+
 part 'component/input_date_directive.dart';
 part 'component/input_time_directive.dart';
 
 part 'controller/projects_controller.dart';
 part 'controller/project_controller.dart';
+part 'controller/signin_controller.dart';
 
 part 'filter/duration_filter.dart';
 part 'filter/floor_filter.dart';
@@ -46,24 +49,62 @@ part 'data/couchdb_client.dart';
 part 'data/projects_client.dart';
 
 class TTRouteInitializer implements RouteInitializer {
+  
+  LoggedUser _loggedUser;
+  
+  TTRouteInitializer(this._loggedUser);
+  
   void init(Router router, ViewFactory view) {
     router.root
       ..addRoute(
-        name: 'projects',
-        defaultRoute: true,
-        enter: view('view/projects.html'))
+        name: 'signin',
+        path: '/signin',
+        enter: view('view/signin.html'))
       ..addRoute(
         name: 'project',
         path: '/projects/:projectId',
-        enter: view('view/project.html'));
+        enter: authView(router, view('view/project.html')))
+      ..addRoute(
+        name: 'projects',
+        defaultRoute: true,
+        path: '/',
+        enter: authView(router, view('view/projects.html')));
       
+  }
+  
+  authView(Router router, ngView) {
+    return (RouteEvent e) {
+      if (!_loggedUser.isAuthenticated) {
+        return router.go('signin', {});        
+      }
+      return ngView(e);
+    };
+  }  
+}
+
+@NgController(
+    selector: '[header-controller]',
+    publishAs: 'ctrl')
+class HeaderController {
+  Router _router;
+  LoggedUser loggedUser;
+  
+  HeaderController(this._router, this.loggedUser);
+  
+  signOut() {
+    loggedUser.user = null;
+    _router.go('signin', {});
   }
 }
 
 class TimeTrackerModule extends Module {
   TimeTrackerModule() {
+    type(LoggedUser);
+    
+    type(HeaderController);
     type(ProjectsController);
     type(ProjectController);
+    type(SigninController);
     
     type(DateInputDirective);
     type(TimeInputDirective);

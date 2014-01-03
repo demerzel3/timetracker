@@ -10,9 +10,14 @@
 </head>
 <body>
   <div class="container">
-    <div class="row header">
-      <h1>TimeTracker</h1>
-    </div>    
+    <div class="row header" header-controller>
+      <div class="col-sm-6">
+        <h1>TimeTracker</h1>
+      </div>
+      <div class="col-sm-6 text-right" ng-if="ctrl.loggedUser.user != null">
+        <i class="fa fa-user"></i> <span ng-bind-template="{{ctrl.loggedUser.user.name}}"></span>
+      </div>
+    </div>
     <!-- maschera la sintassi di angular fino al termine del caricamento -->
     <ng-view></ng-view>
   </div>

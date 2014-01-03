@@ -5,11 +5,8 @@ part of timetracker;
     publishAs: 'ctrl')
 class ProjectsController {
 
-  Scope _scope;
   ProjectsClient _db;
   Router _router;
-  
-  List<User> users = User.defaultUsers();
   
   LinkedHashMap<String, Project> projects;
   Iterable<Project> projectsList;
@@ -17,7 +14,7 @@ class ProjectsController {
     
   Project selectedProject;  
   
-  ProjectsController(this._db, this._scope, this._router) {
+  ProjectsController(this._db, this._router) {
     projects = new LinkedHashMap<String, Project>();
     _pollForChanges(seq: 0); 
   }

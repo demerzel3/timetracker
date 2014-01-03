@@ -5,7 +5,6 @@ part of timetracker;
     publishAs: 'ctrl')
 class ProjectController {
 
-  Scope _scope;
   ProjectsClient _db;
   Modal _tasksBinModal;
   
@@ -22,7 +21,7 @@ class ProjectController {
   
   bool newTaskFormFocus = false;
   
-  ProjectController(this._db, this._scope, Http http, RouteProvider routeProvider) {
+  ProjectController(this._db, Http http, RouteProvider routeProvider) {
     _projectId = routeProvider.parameters['projectId'];
     //print(_db);
     //_db.getAll();
