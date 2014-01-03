@@ -21,6 +21,26 @@ class Project {
     }
   }
   
+  Duration get totalDuration {
+    var total = new Duration();
+    tasks.forEach((Task task) => total += task.totalDuration);
+    return total;
+  }
+  
+  double get totalEstimate {
+    double total = null;
+    tasks.forEach((Task task) {
+      if (task.estimate != null) {
+        if (total == null) {
+          total = task.estimate;
+        } else {
+          total += task.estimate;
+        }
+      }
+    });
+    return total;
+  }
+  
   /**
    * Serializza id e rev con il tratto basso. 
    */

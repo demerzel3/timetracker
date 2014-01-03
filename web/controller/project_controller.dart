@@ -50,8 +50,16 @@ class ProjectController {
   
   _pollForChanges({int seq: null}) {
     _db.pollForChanges(seq: seq, docIds: [_projectId]).then((List<Project> changedProjects) {
-      // TODO: preserve task selection
       project = changedProjects[0];
+      if (selectedTask != null) {
+        var selectedTaskId = selectedTask.id;
+        selectedTask = null;
+        for (int i = 0; i < project.tasks.length; i++) {
+          if (project.tasks[i].id == selectedTaskId) {
+            selectedTask = project.tasks[i];
+          }
+        }
+      }      
       
       // resume polling
       // TODO: stop polling if scope has been destroyed
@@ -65,6 +73,9 @@ class ProjectController {
       project.tasks.add(newTask);        
       _saveProject();
       newTask = new Task();
+      
+      // TODO: move this out of the controller
+      dom.document.querySelector('#newTaskNameBox').focus();
     });
   }
   

@@ -15,3 +15,23 @@ h1 {
   padding: 8px 10px;
   margin-bottom: 10px;
 }
+
+.list-group-item.selectable {
+  cursor: pointer;
+}
+
+.list-group-item.active > .badge {
+  color: #428bca;
+  background-color: #fff;
+}
+.list-group-item > .actions {
+  visibility: hidden;
+  float: right;
+}
+.list-group-item.active > .actions,
+.list-group-item:hover > .actions {
+  visibility: visible;
+}
+.list-group-item.active > .actions > a {
+  color: white;
+}

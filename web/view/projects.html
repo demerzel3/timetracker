@@ -6,11 +6,12 @@
       <h2>Progetti</h2>
 
       <div class="list-group projects-list">
-        <a ng-repeat="project in ctrl.projectsList" 
-           ng-class="{'active': ctrl.selectedProject == project}" 
-           href="#/projects/{{project.id}}" class="list-group-item">
+        <div ng-repeat="project in ctrl.projectsList" 
+           ng-class="{'active': ctrl.selectedProject == project}"
+           ng-click="ctrl.selectProject(project)"
+           class="list-group-item selectable" > <!-- href="#/projects/{{project.id}}" -->
           {{project.name}}
-        </a>
+        </div>
         <div class="list-group-item">
           <form name="newProjectForm" role="form" ng-submit="ctrl.createNewProject()">
             <input id="newProjectInput" type="text" ng-model="ctrl.newProjectName" placeholder="Nuovo Progetto" />
