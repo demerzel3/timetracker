@@ -48,28 +48,37 @@ part 'model/user.dart';
 part 'data/couchdb_client.dart';
 part 'data/projects_client.dart';
 
-class TTRouteInitializer implements RouteInitializer {
+
+
+
+class TTRouter {
   
-  LoggedUser _loggedUser;
+  final LoggedUser _loggedUser;
   
-  TTRouteInitializer(this._loggedUser);
+  TTRouter(this._loggedUser);
   
-  void init(Router router, ViewFactory view) {
+  void call(Router router, ViewFactory views) {
+    views.configure({
+      'signin': ngRoute(
+          path: '/signin',
+          view: 'view/signin.html'),
+    });
+    /*
     router.root
       ..addRoute(
         name: 'signin',
         path: '/signin',
-        enter: view('view/signin.html'))
+        enter: views('view/signin.html'))
       ..addRoute(
         name: 'project',
         path: '/projects/:projectId',
-        enter: authView(router, view('view/project.html')))
+        enter: authView(router, views('view/project.html')))
       ..addRoute(
         name: 'projects',
         defaultRoute: true,
         path: '/',
-        enter: authView(router, view('view/projects.html')));
-      
+        enter: authView(router, views('view/projects.html')));
+    */
   }
   
   authView(Router router, ngView) {
@@ -112,7 +121,7 @@ class TimeTrackerModule extends Module {
     type(DurationFilter);
     type(FloorFilter);
     
-    type(RouteInitializer, implementedBy: TTRouteInitializer);
+    type(RouteInitializerFn, implementedBy: TTRouter);
     factory(NgRoutingUsePushState,
         (_) => new NgRoutingUsePushState.value(false));
     
@@ -121,29 +130,6 @@ class TimeTrackerModule extends Module {
       // http://192.168.230.230/
       return new ProjectsClient(injector.get(Http), 'http://192.168.230.230:5984');
     });
-
-    /*
-    // I still don't get it: how do I unserialize real world json?
-    factory(Serialization, (Injector injector) {
-      projectToMap(Project p) => {"name": p.name, "tasks": p.tasks};
-      createProject(Map m) => new Project(m["name"]);
-      fillProject(Project p, Map m) => p.name = m["name"];
-      var projectRule = new ClosureRule(Project, projectToMap, createProject, fillProject);
-      
-      taskToMap(Task t) => {"name": t.name};
-      createTask(Map m) => new Task(m["name"]);
-      fillTask(Task t, Map m) => t.name = m["name"];
-      var taskRule = new ClosureRule(Task, taskToMap, createTask, fillTask);
-      
-      return new Serialization()
-        ..selfDescribing = false
-        ..addRule(projectRule)
-        ..addRule(taskRule);
-    });
-    */
-    
-    //type(InlineEditableValue);
-    //type(Profiler, implementedBy: Profiler); // comment out to enable profiling
   }
 }
 
