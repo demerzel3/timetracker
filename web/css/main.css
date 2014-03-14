@@ -62,6 +62,15 @@ a.link-sm {
 .list-group-item.selectable {
   cursor: pointer;
 }
+.list-group-item.active {
+  background-color: #428bca;
+  border-color: #428bca;
+  color: white;
+}
+.list-group-item.active + .list-group-item {
+  border-top: none;
+  padding-top: 11px;
+}
 
 .list-group-item.active > .badge {
   color: #428bca;

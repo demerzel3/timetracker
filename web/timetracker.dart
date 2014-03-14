@@ -26,7 +26,7 @@ import 'package:angular/angular.dart';
 import 'package:angular/utils.dart';
 import 'package:intl/intl.dart';
 import 'package:bootjack/bootjack.dart';
-//import 'package:serialization/serialization.dart';
+import 'package:event_stream/event_stream.dart';
 
 part 'auth/logged_user.dart';
 
@@ -36,6 +36,8 @@ part 'component/input_time_directive.dart';
 part 'controller/projects_controller.dart';
 part 'controller/project_controller.dart';
 part 'controller/signin_controller.dart';
+
+part 'event/change_event.dart';
 
 part 'filter/duration_filter.dart';
 part 'filter/floor_filter.dart';
@@ -58,12 +60,6 @@ class TTRouter {
   TTRouter(this._loggedUser);
   
   void call(Router router, ViewFactory views) {
-    views.configure({
-      'signin': ngRoute(
-          path: '/signin',
-          view: 'view/signin.html'),
-    });
-    /*
     router.root
       ..addRoute(
         name: 'signin',
@@ -78,7 +74,6 @@ class TTRouter {
         defaultRoute: true,
         path: '/',
         enter: authView(router, views('view/projects.html')));
-    */
   }
   
   authView(Router router, ngView) {
@@ -126,9 +121,9 @@ class TimeTrackerModule extends Module {
         (_) => new NgRoutingUsePushState.value(false));
     
     factory(ProjectsClient, (Injector injector) {
-      //return new ProjectsClient(injector.get(Http), 'http://127.0.0.1:5984');
+      return new ProjectsClient(injector.get(Http), 'http://127.0.0.1:5984');
       // http://192.168.230.230/
-      return new ProjectsClient(injector.get(Http), 'http://192.168.230.230:5984');
+      //return new ProjectsClient(injector.get(Http), 'http://192.168.230.230:5984');
     });
   }
 }

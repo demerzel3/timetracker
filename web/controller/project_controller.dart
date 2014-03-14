@@ -30,7 +30,7 @@ class ProjectController {
     _projectId = routeProvider.parameters['projectId'];
     
     // whenever activeTiming get changed, we start a timer that updates its duration
-    _scope.$watch('ctrl.activeTiming', (Timing _activeTiming) {
+    _scope.watch('ctrl.activeTiming', (Timing _activeTiming, Timing) {
       if (_activeTiming == null) {
         if (durationUpdateTimer != null) {
           durationUpdateTimer.cancel();
@@ -40,11 +40,12 @@ class ProjectController {
       }
       durationUpdateTimer = new async.Timer.periodic(new Duration(seconds: 1), (async.Timer timer) {
         _activeTiming.updateDuration(new DateTime.now());
-        //print(_scope.$id + " - tick");
+        // update the total duration of the project based on the new timing duration
+        project.updateTotalDuration();
       });
     });
     
-    _scope.$on('\$destroy', (ScopeEvent event) {
+    _scope.on('\$destroy').listen((ScopeEvent event) {
       if (identical(event.targetScope, _scope)) {
         print('TODO: cleanup timers and pending actions');
       }
@@ -94,6 +95,8 @@ class ProjectController {
   
   stopTimer() {
     activeTiming.updateDuration(new DateTime.now());
+    // update the total duration of the project based on the new timing duration
+    project.updateTotalDuration();    
     activeTiming.trackingActive = false;
     _saveProject();
     activeTiming = null;
@@ -102,7 +105,8 @@ class ProjectController {
   createNewTask() {
     _db.generateUuid().then((String uuid) {
       newTask.id = uuid;
-      project.tasks.add(newTask);        
+      project.tasks.add(newTask);
+      project.updateTotalEstimate();
       _saveProject();
       newTask = new Task();
       

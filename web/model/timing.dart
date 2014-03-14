@@ -2,6 +2,7 @@ part of timetracker;
 
 class Timing {
   //DateFormat _formatter = new DateFormat('dd/MM/yyyy');
+  EventStream<ChangeEvent<Duration>> _durationChanged = new EventStream<ChangeEvent<Duration>>();
   
   String id;
   User user;
@@ -14,6 +15,8 @@ class Timing {
   Task task;
     
   Timing();
+  
+  EventStream<ChangeEvent<Duration>> get durationChanged => _durationChanged; 
   
   Timing.fromJson(Map raw) {
     id = raw['id'];
@@ -30,7 +33,11 @@ class Timing {
    * Updates duration according to the start date (this.date) and the end date provided in endTime.
    */
   Duration updateDuration(DateTime endTime) {
+    var prevDuration = duration;
     duration = endTime.difference(date);
+    
+    _durationChanged.signal(new ChangeEvent<Duration>(duration, prevDuration));
+    
     return duration;
   }
   

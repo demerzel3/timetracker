@@ -7,7 +7,10 @@
     <div class="col-md-4 text-center">
       {{ctrl.project.name}}
       &emsp;
-      <span class="badge"><i class="fa fa-clock-o"></i>&emsp;{{ctrl.project.totalDuration|duration:'h:mm|&minus;'}} <span ng-if="ctrl.project.totalEstimate != null">/ {{ctrl.project.totalEstimate|floor}}:00</span></span>
+      <span class="badge">
+        <i class="fa fa-clock-o"></i>&emsp;{{ctrl.project.totalDuration|duration:'h:mm|&minus;'}} 
+        <span ng-if="ctrl.project.totalEstimate != null">/ {{ctrl.project.totalEstimate|floor}}:00</span>
+      </span>
     </div>
     <div class="col-md-4 text-right">
       <button type="button" class="btn btn-default btn-sm"
@@ -173,7 +176,7 @@
         </div>
         <div class="modal-footer">
           <div class="text-center">
-            <a class="btn btn-sm btn-danger" ng-click="ctrl.clearDeletedTasks()">Delete all permanently</a>
+            <a class="btn btn-link btn-sm btn-danger" ng-click="ctrl.clearDeletedTasks()">Delete all permanently</a>
           </div>
         </div>
       </div><!-- /.modal-content -->

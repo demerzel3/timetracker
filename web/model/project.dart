@@ -7,6 +7,10 @@ class Project {
   List<Task> tasks = new List<Task>();
   List<Task> deletedTasks = new List<Task>();
   
+  // this should not be persisted
+  Duration _totalDuration;
+  num _totalEstimate;
+  
   Project(this.name);
   
   Project.fromJson(Map raw) {
@@ -19,15 +23,29 @@ class Project {
     if (raw.containsKey('deletedTasks')) {
       deletedTasks = new List<Task>.from(raw['deletedTasks'].map((rawTask) => new Task.fromJson(rawTask)));
     }
+    
+    updateTotalDuration();
+    updateTotalEstimate();
   }
   
-  Duration get totalDuration {
+  /**
+   * Updates the total duration for each of the tasks in the project, and for the project itself
+   */
+  updateTotalDuration() {
     var total = new Duration();
-    tasks.forEach((Task task) => total += task.totalDuration);
-    return total;
+    tasks.forEach((Task task) {
+      task.updateTotalDuration();
+      total += task.totalDuration;
+    });
+    _totalDuration = total;
   }
   
-  num get totalEstimate {
+  Duration get totalDuration => _totalDuration;
+  
+  /**
+   * Updates the total estimate of the project
+   */
+  updateTotalEstimate() {
     num total = null;
     tasks.forEach((Task task) {
       if (task.estimate != null) {
@@ -38,8 +56,10 @@ class Project {
         }
       }
     });
-    return total;
+    _totalEstimate = total;
   }
+  
+  num get totalEstimate => _totalEstimate;
   
   /**
    * Finds in its inner structure the only one possible active timing, or returns null.

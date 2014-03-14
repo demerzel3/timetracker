@@ -6,6 +6,8 @@ class Task {
   num estimate;
   List<Timing> timings = new List<Timing>();
   
+  Duration _totalDuration;
+  
   Task();
   
   Task.fromJson(raw) {
@@ -17,11 +19,12 @@ class Task {
     }
   }
   
-  Duration get totalDuration {
+  updateTotalDuration() {
     var total = new Duration();
     timings.forEach((Timing timing) => total += timing.duration);
-    return total;
+    _totalDuration = total;
   }
+  Duration get totalDuration => _totalDuration;
   
   /**
    * Finds in its inner structure the only one possible active timing, or returns null.

@@ -4,3 +4,4 @@ dependencies:
   angular: '>=0.9.9 <0.10.0'
   bootjack: any
   browser: any
+  event_stream: any
