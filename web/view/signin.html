@@ -2,16 +2,25 @@
 
   <div class="row">
 
-    <div class="col-md-3">
+    <div class="col-md-12">
       <h2>Sign In</h2>
 
-      <form role="form" class="form-inline" ng-submit="ctrl.signIn()">
-        <div class="form-group">
-          <select id="userBox" class="form-control" ng-model="ctrl.user" required>
-            <option disabled selected value="">Scegli...</option>
-            <option ng-repeat="user in ctrl.users" ng-value="user">{{user.name}}</option>
-          </select>
+      <form role="form" ng-submit="ctrl.signIn()">
+        <div class="face-chooser">
+          <div class="face inline" ng-class="{selected: ctrl.user == user}" 
+               ng-repeat="user in ctrl.users" ng-click="ctrl.user = user">
+            <img ng-src="{{user.avatarUrl}}"/>
+            {{user.name}}
+          </div>
         </div>
+      
+        <!--
+        <select id="userBox" class="form-control" ng-model="ctrl.user" required>
+          <option disabled selected value="">Scegli...</option>
+          <option ng-repeat="user in ctrl.users" ng-value="user">{{user.name}}</option>
+        </select>
+        -->
+          
         <div class="form-group">
           <button type="submit" ng-disabled="ctrl.user == null" class="btn btn-primary"><i class="fa fa-sign-in"></i> Sign In</button>
         </div>          

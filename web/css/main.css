@@ -1,3 +1,49 @@
+.face {
+  text-align: center;
+  padding-bottom: 5px;
+  /*background-color: #f6f6f6; /**/
+  border-top-left-radius: 48px;
+  border-top-right-radius: 48px;
+  border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 10px;
+}
+.face.inline {
+  display: inline-block;
+}
+.face img {
+  width: 96px;
+  height: 96px;
+  border-radius: 48px;
+  line-break: after;
+  display: block;
+  padding: 8px;
+}
+
+.face-chooser {
+  margin-bottom: 15px;
+}
+.face-chooser .face {
+  margin-left: 15px;
+  opacity: 0.7;
+  cursor: pointer;
+  /*border: solid 1px transparent; /**/
+  background-color: white;
+  -webkit-transition: opacity 0.2s ease-out, background-color 0.2s ease-out, border-color 0.2s ease-out;
+}
+.face-chooser .face img {
+}
+.face-chooser .face:first-child {
+  margin-left: 0;
+}
+.face-chooser .face.selected {
+  opacity: 1;
+  background-color: #f3f3f3;
+  /*border: solid 1px #ccc; /**/
+  /*color: white; /**/
+}
+.face-chooser .face.selected img {
+}
+
 /* ANIMATIONS */
 @-webkit-keyframes fadeInOut {
   0% {

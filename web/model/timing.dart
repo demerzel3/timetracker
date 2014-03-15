@@ -21,7 +21,8 @@ class Timing {
   Timing.fromJson(Map raw) {
     id = raw['id'];
     // TODO: move this to another part of the application
-    user = new User(raw['user']['id'], raw['user']['name']);
+    user = User.defaultUsers().firstWhere((User u) => u.id == raw['user']['id']);
+    //user = new User(raw['user']['id'], raw['user']['name']);
     date = DateTime.parse(raw['date']);
     duration = new Duration(hours: raw['duration']['hours'], minutes: raw['duration']['minutes']);
     if (raw.containsKey('trackingActive')) {
