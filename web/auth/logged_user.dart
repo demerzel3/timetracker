@@ -30,7 +30,11 @@ class LoggedUser {
   
   set user(User user) {
     _user = user;
-    _cookies[USERID_COOKIE_NAME] = user.id;
+    if (user == null) {
+      _cookies.remove(USERID_COOKIE_NAME);
+    } else {
+      _cookies[USERID_COOKIE_NAME] = user.id;
+    }
   }
   
   bool get isAuthenticated {

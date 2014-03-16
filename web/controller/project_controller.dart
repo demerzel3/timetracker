@@ -172,13 +172,11 @@ class ProjectController {
     var currentSelectedTask = selectedTask;
     var me = this;
     var timer = new async.Timer(new Duration(milliseconds:0), () {
-      _scope.$apply(() {
-        if (currentSelectedTask == task) {
-          me.selectedTask = null;
-        } else {
-          me.selectedTask = currentSelectedTask;
-        }
-      });      
+      if (currentSelectedTask == task) {
+        me.selectedTask = null;
+      } else {
+        me.selectedTask = currentSelectedTask;
+      }
     });
   }
   

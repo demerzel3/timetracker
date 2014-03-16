@@ -53,7 +53,7 @@ class DateInputDirective {
   processValue() {
     var value = _valueToDate(inputElement.value);
     if (value != ngModel.viewValue) {
-      scope.$apply(() => ngModel.viewValue = value);
+      ngModel.viewValue = value;
     }
   }
 }

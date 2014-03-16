@@ -56,7 +56,7 @@ class TimeInputDirective {
   processValue() {
     var value = _stringToDuration(inputElement.value);
     if (value != ngModel.viewValue) {
-      scope.$apply(() => ngModel.viewValue = value);
+      ngModel.viewValue = value;
     }
   }
 }

@@ -33,6 +33,7 @@ part 'auth/logged_user.dart';
 part 'component/input_date_directive.dart';
 part 'component/input_time_directive.dart';
 
+part 'controller/header_controller.dart';
 part 'controller/projects_controller.dart';
 part 'controller/project_controller.dart';
 part 'controller/signin_controller.dart';
@@ -84,21 +85,6 @@ class TTRouter {
       return ngView(e);
     };
   }  
-}
-
-@NgController(
-    selector: '[header-controller]',
-    publishAs: 'ctrl')
-class HeaderController {
-  Router _router;
-  LoggedUser loggedUser;
-  
-  HeaderController(this._router, this.loggedUser);
-  
-  signOut() {
-    loggedUser.user = null;
-    _router.go('signin', {});
-  }
 }
 
 class TimeTrackerModule extends Module {

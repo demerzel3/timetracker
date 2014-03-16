@@ -15,7 +15,11 @@
         <h1>TimeTracker</h1>
       </div>
       <div class="col-sm-6 text-right" ng-if="ctrl.loggedUser.user != null">
-        <i class="fa fa-user"></i> <span ng-bind-template="{{ctrl.loggedUser.user.name}}"></span>
+        <div class="face">
+          <img ng-src="{{ctrl.loggedUser.user.avatarUrl}}"/>
+          <span ng-bind-template="{{ctrl.loggedUser.user.name}}"></span>
+        </div>
+        <button class="btn btn-xs" ng-click="ctrl.signOut()">Logout</button>
       </div>
     </div>
     <!-- maschera la sintassi di angular fino al termine del caricamento -->

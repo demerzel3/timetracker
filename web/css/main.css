@@ -19,6 +19,18 @@
   padding: 8px;
 }
 
+.header .face {
+  display: inline-block;
+  padding-bottom: 0;
+}
+.header .face img {
+  display: inline;
+  width: 24px;
+  height: 24px;
+  border-radius: 12px;
+  padding: 0;
+}
+
 .face-chooser {
   margin-bottom: 15px;
 }
@@ -96,6 +108,7 @@ a.link-sm {
   font-size: 1.1em;
   font-weight: normal;  
   margin: 0;
+  line-height: 24px;
 }
 
 .navigation {
