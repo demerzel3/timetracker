@@ -71,6 +71,24 @@
 
     <div class="col-md-6" ng-if="ctrl.selectedTask != null">
     
+      <div ng-repeat="(dayKey, durations) in ctrl.timeline">
+        {{dayKey}}
+        <!--
+        <div ng-repeat="(duration, userId) in durations">
+          {{userId}}
+          {{duration||duration:'hh:mm:ss|&minus;'}}
+        </div>
+        <div ng-repeat="user in ctrl.users">
+          <div class="face inline">
+            <img ng-src="{{user.avatarUrl}}"/>
+            {{user.name}}
+          </div>
+          {{ ctrl.timeline[dayKey] }}
+          {{ ctrl.timeline[dayKey][user.id]|duration:'hh:mm:ss|&minus;'}}
+        </div>
+        -->
+      </div>
+    
       <div class="jumbotron jumbotron-timer" ng-if="ctrl.activeTiming == null">
         <a class="pull-right btn btn-success btn-lg" style="margin-top: 9px" role="button" 
            ng-click="ctrl.startTimer()">

@@ -16,7 +16,7 @@ class DurationFilter {
     if (chunks.length > 1) {
       zeroExpr = chunks[1];
     }
-    if (zeroExpr != null && duration.inMicroseconds == 0) {
+    if (zeroExpr != null && (duration == null || duration.inMicroseconds == 0)) {
       return zeroExpr;
     }
     return format

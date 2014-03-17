@@ -19,6 +19,10 @@ class User {
     return 'User['+id+']';
   }
   
+  int get hashCode {
+    return id.hashCode;
+  }
+  
   bool operator ==(other) {
     if (other is User) {
       return other.id == id;

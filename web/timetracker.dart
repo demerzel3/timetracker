@@ -5,6 +5,7 @@ import 'dart:html' as dom;
 import 'dart:async' as async;
 import 'dart:convert';
 import 'dart:collection';
+import 'package:intl/intl.dart';
 
 /* Should be used to reduce ouput size
 @MirrorsUsed(targets: const[
@@ -47,6 +48,7 @@ part 'model/project.dart';
 part 'model/task.dart';
 part 'model/timing.dart';
 part 'model/user.dart';
+part 'model/task_timeline.dart';
 
 part 'data/couchdb_client.dart';
 part 'data/projects_client.dart';

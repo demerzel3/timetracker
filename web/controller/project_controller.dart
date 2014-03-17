@@ -15,6 +15,9 @@ class ProjectController {
   Project project;
   
   Task selectedTask;
+  TaskTimeline selectedTaskTimeline;
+  Map timeline;
+  
   // TODO: make this "timings" to account for multiple active timings at once, from different users
   Timing activeTiming;
   async.Timer durationUpdateTimer;
@@ -38,10 +41,21 @@ class ProjectController {
         }
         return;
       }
-      durationUpdateTimer = new async.Timer.periodic(new Duration(seconds: 1), (async.Timer timer) {
+      durationUpdateTimer = new async.Timer.periodic(new Duration(seconds: 5), (async.Timer timer) {
         _activeTiming.updateDuration(new DateTime.now());
         // update the total duration of the project based on the new timing duration
         project.updateTotalDuration();
+        
+        if (timeline != null) {
+          var now = new DateTime.now();
+          //selectedTaskTimeline.days.add(new DateTime(now.year, now.month, now.day + 1));
+          var dayKey = new DateFormat('yyyy-MM-dd').format(_activeTiming.date);
+          //var dayOnly = new DateTime(_activeTiming.date.year, _activeTiming.date.month, _activeTiming.date.day);
+          timeline[dayKey][_activeTiming.user.id] = new Duration(minutes: 1);
+          timeline[dayKey] = {
+            'gabriele': new Duration(minutes: 1)
+          };
+        }
       });
     });
     
@@ -217,6 +231,8 @@ class ProjectController {
   
   selectTask(Task task) {
     selectedTask = task;
+    selectedTaskTimeline = new TaskTimeline(task);
+    timeline = selectedTaskTimeline.timeline;
   }
     
   debug() {
