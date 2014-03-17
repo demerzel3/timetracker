@@ -3,7 +3,7 @@ part of timetracker;
 @NgController(
     selector: '[project-controller]',
     publishAs: 'ctrl')
-class ProjectController {
+class ProjectController implements NgDetachAware {
 
   ProjectsClient _db;
   LoggedUser _loggedUser;
@@ -32,12 +32,13 @@ class ProjectController {
     _projectId = routeProvider.parameters['projectId'];
     
     // whenever activeTiming get changed, we start a timer that updates its duration
-    _scope.watch('ctrl.activeTiming', (Timing _activeTiming, Timing) {
+    _scope.watch('ctrl.activeTiming', (Timing _activeTiming, Timing oldActiveTiming) {
+      print('Active timing changed to '+ (_activeTiming == null ? 'null' : _activeTiming.id));
+      if (durationUpdateTimer != null) {
+        durationUpdateTimer.cancel();
+        durationUpdateTimer = null;
+      }
       if (_activeTiming == null) {
-        if (durationUpdateTimer != null) {
-          durationUpdateTimer.cancel();
-          durationUpdateTimer = null;
-        }
         return;
       }
       durationUpdateTimer = new async.Timer.periodic(new Duration(seconds: 1), (async.Timer timer) {
@@ -46,22 +47,40 @@ class ProjectController {
         project.updateTotalDuration();
       });
     });
-    
-    _scope.on('\$destroy').listen((ScopeEvent event) {
-      if (identical(event.targetScope, _scope)) {
-        print('TODO: cleanup timers and pending actions');
-      }
-    });
-    
+        
     _pollForChanges(seq: 0); 
+  }
+  
+  void detach() {
+    // cleanup Timeline
+    if (selectedTaskTimeline != null) {
+      selectedTaskTimeline.detach();
+      selectedTaskTimeline = null;
+    }
+    // cleanup duration update timer
+    if (durationUpdateTimer != null) {
+      durationUpdateTimer.cancel();
+      durationUpdateTimer = null;
+    }
   }
   
   _pollForChanges({int seq: null}) {
     _db.pollForChanges(seq: seq, docIds: [_projectId]).then((List<Project> changedProjects) {
-      project = changedProjects[0];
+      // stop polling if scope has been destroyed
+      if (_scope.isDestroyed) {
+        return;
+      }
       
-      // restore activeTiming for the current user
+      project = changedProjects[0];
+      print(project.name + " updated");
+      
+      // restore activeTiming for the current user and update the total immediately
       activeTiming = project.getActiveTiming(_loggedUser.user);
+      if (activeTiming != null) {
+        activeTiming.updateDuration(new DateTime.now());
+        // update the total duration of the project based on the new timing duration, this won't be necessary in the future
+        project.updateTotalDuration();        
+      }
       
       // preserve selected task
       if (selectedTask != null) {
@@ -69,13 +88,12 @@ class ProjectController {
         selectedTask = null;
         for (Task task in project.tasks) {
           if (task.id == selectedTaskId) {
-            selectedTask = task;
+            selectTask(task);
           }
         }
       }
       
       // resume polling
-      // TODO: stop polling if scope has been destroyed
       async.scheduleMicrotask(_pollForChanges);
     });
   }
@@ -88,7 +106,7 @@ class ProjectController {
     autoTiming.task = selectedTask; // set the parent task
     _db.generateUuid().then((String uuid) {
       autoTiming.id = uuid;
-      selectedTask.timings.add(autoTiming);
+      selectedTask.addTiming(autoTiming);
       _saveProject();
       
       activeTiming = autoTiming;
@@ -100,8 +118,8 @@ class ProjectController {
     // update the total duration of the project based on the new timing duration
     project.updateTotalDuration();    
     activeTiming.trackingActive = false;
-    _saveProject();
     activeTiming = null;
+    _saveProject();
   }
   
   createNewTask() {
@@ -219,7 +237,13 @@ class ProjectController {
   
   selectTask(Task task) {
     selectedTask = task;
-    selectedTaskTimeline = new TaskTimeline(task);
+    if (selectedTaskTimeline != null) {
+      selectedTaskTimeline.detach();
+      selectedTaskTimeline = null;
+    }
+    if (task != null) {
+      selectedTaskTimeline = new TaskTimeline(task);
+    }
   }
     
   debug() {

@@ -50,41 +50,66 @@ class TaskTimeline {
    * List of days for which there is at least a timing
    */
   List<DayUserDurations> days = [];
+  
+  /**
+   * Event dubscriptions, are cancelled during dispose()
+   */
+  var _subscriptions = new List<async.StreamSubscription>();
     
   TaskTimeline(this.task) {
     for (Timing t in task.timings) {
-      
-      DayUserDurations foundDay;
-      for (var day in days) {
-        if (day.isSameDay(t.date)) {
-          foundDay = day;
-          break;
-        }
-      }
-      if (foundDay == null) {
-        foundDay = new DayUserDurations(t.date);
-        days.add(foundDay);
-      }
-      
-      UserDuration foundUser;
-      for (var userDuration in foundDay.users) {
-        if (userDuration.isSameUser(t.user)) {
-          foundUser = userDuration;
-          break;
-        }
-      }
-      
-      foundUser.duration += t.duration;
-      _updateOnChange(t,  foundUser);
+      var userDuration = _getUserDuration(t);
+      userDuration.duration += t.duration;
+      _updateOnDurationChange(t, userDuration);
     }
+    
+    var sub = task.timingAdded.listen((Timing timing) {
+      var userDuration = _getUserDuration(timing);
+      userDuration.duration += timing.duration;
+      _updateOnDurationChange(timing, userDuration);      
+    });
+    _subscriptions.add(sub);
   }
   
-  _updateOnChange(Timing t, UserDuration userDuration) {
-    t.durationChanged.stream.listen((ChangeEvent<Duration> event) {
-      print("duration changed on timing " + t.id);
+  UserDuration _getUserDuration(Timing t) {
+    DayUserDurations foundDay;
+    for (var day in days) {
+      if (day.isSameDay(t.date)) {
+        foundDay = day;
+        break;
+      }
+    }
+    if (foundDay == null) {
+      foundDay = new DayUserDurations(t.date);
+      days.add(foundDay);
+    }
+    
+    UserDuration foundUser;
+    for (var userDuration in foundDay.users) {
+      if (userDuration.isSameUser(t.user)) {
+        foundUser = userDuration;
+        break;
+      }
+    }
+    return foundUser;
+  }
+  
+  _updateOnDurationChange(Timing t, UserDuration userDuration) {
+    var sub = t.durationChanged.listen((ChangeEvent<Duration> event) {
+      //print("duration changed on timing " + t.id);
       userDuration.duration -= event.oldValue;
       userDuration.duration += event.newValue; 
      });
+    _subscriptions.add(sub);
+  }
+  
+  /**
+   * Stop listening to events from task and timings.
+   */
+  detach() {
+    for (async.StreamSubscription sub in _subscriptions) {
+      sub.cancel();
+    }
   }
 }
 

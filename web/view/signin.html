@@ -8,7 +8,9 @@
       <form role="form" ng-submit="ctrl.signIn()">
         <div class="face-chooser">
           <div class="face inline" ng-class="{selected: ctrl.user == user}" 
-               ng-repeat="user in ctrl.users" ng-click="ctrl.user = user">
+               ng-repeat="user in ctrl.users" 
+               ng-click="ctrl.user = user"
+               ng-doubleclick="ctrl.signIn()">
             <img ng-src="{{user.avatarUrl}}"/>
             {{user.name}}
           </div>

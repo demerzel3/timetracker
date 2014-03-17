@@ -2,7 +2,6 @@ part of timetracker;
 
 class Timing {
   //DateFormat _formatter = new DateFormat('dd/MM/yyyy');
-  EventStream<ChangeEvent<Duration>> _durationChanged = new EventStream<ChangeEvent<Duration>>();
   
   String id;
   User user;
@@ -16,7 +15,8 @@ class Timing {
     
   Timing();
   
-  EventStream<ChangeEvent<Duration>> get durationChanged => _durationChanged; 
+  EventStream<ChangeEvent<Duration>> _durationChanged = new EventStream<ChangeEvent<Duration>>();
+  async.Stream<ChangeEvent<Duration>> get durationChanged => _durationChanged.stream; 
   
   Timing.fromJson(Map raw) {
     id = raw['id'];
@@ -40,6 +40,14 @@ class Timing {
     _durationChanged.signal(new ChangeEvent<Duration>(duration, prevDuration));
     
     return duration;
+  }
+  
+  bool operator ==(other) {
+    if (other is Timing) {
+      return id == other.id;
+    } else {
+      return false;
+    }
   }
   
   Map toJson() {

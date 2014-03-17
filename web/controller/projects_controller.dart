@@ -3,8 +3,9 @@ part of timetracker;
 @NgController(
     selector: '[projects-controller]',
     publishAs: 'ctrl')
-class ProjectsController {
+class ProjectsController implements NgDetachAware {
 
+  Scope _scope;
   ProjectsClient _db;
   Router _router;
   
@@ -14,20 +15,28 @@ class ProjectsController {
     
   Project selectedProject;  
   
-  ProjectsController(this._db, this._router) {
+  ProjectsController(this._scope, this._db, this._router) {
     projects = new LinkedHashMap<String, Project>();
     _pollForChanges(seq: 0); 
   }
   
-  _pollForChanges({int seq: null}) {
+  void detach() {
+    // is there something to do here?
+  }
+  
+  void _pollForChanges({int seq: null}) {
     _db.pollForChanges(seq: seq).then((List<Project> changedProjects) {
+      // Stops polling if scope has been destroyed
+      if (_scope.isDestroyed) {
+        return;
+      }
+      
       // add changed projects to the list of projects
       // TODO: improve this!
       changedProjects.forEach((Project project) => _updateProject(project));
       projectsList = projects.values;
       
       // resume polling
-      // TODO: stop polling if scope has been destroyed
       async.scheduleMicrotask(_pollForChanges);
     });
   }
@@ -35,7 +44,7 @@ class ProjectsController {
   /**
    * Updates a chnaged project in the projects map, preserving selection of project and task.
    */
-  _updateProject(Project project) {
+  void _updateProject(Project project) {
     print(project.name + " updated");
     var wasSelected = (selectedProject != null && projects[project.id] == selectedProject);
     projects[project.id] = project;

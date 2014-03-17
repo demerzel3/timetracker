@@ -6,6 +6,9 @@ class Task {
   num estimate;
   List<Timing> timings = new List<Timing>();
   
+  EventStream<Timing> _timingAdded = new EventStream<Timing>();
+  async.Stream<Timing> get timingAdded => _timingAdded.stream;
+  
   Duration _totalDuration;
   
   Task();
@@ -17,6 +20,14 @@ class Task {
     if (raw['timings'] != null) {
       timings = new List<Timing>.from(raw['timings'].map((rawTiming) => new Timing.fromJson(rawTiming)..task = this));
     }
+  }
+  
+  /**
+   * Adds a new timing, fires it via timingAdded
+   */
+  addTiming(Timing timing) {
+    timings.add(timing);
+    _timingAdded.signal(timing);
   }
   
   updateTotalDuration() {
