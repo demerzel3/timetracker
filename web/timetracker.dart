@@ -38,6 +38,7 @@ part 'controller/header_controller.dart';
 part 'controller/projects_controller.dart';
 part 'controller/project_controller.dart';
 part 'controller/signin_controller.dart';
+part 'controller/test_controller.dart';
 
 part 'event/change_event.dart';
 
@@ -97,6 +98,7 @@ class TimeTrackerModule extends Module {
     type(ProjectsController);
     type(ProjectController);
     type(SigninController);
+    type(TestController);
     
     type(DateInputDirective);
     type(TimeInputDirective);

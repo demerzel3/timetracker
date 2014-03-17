@@ -1,110 +1,91 @@
 part of timetracker;
 
-class UserDurationMap {
-  Map<String, Duration> _impl = new Map<String, Duration>();
-  Duration _totalDuration = new Duration();
+class UserDuration {
+  User user;
+  Duration duration = new Duration();
   
-  Duration get totalDuration => _totalDuration;
+  UserDuration(this.user);
   
-  Duration operator [](User user) => _impl[user.id];
-  
-  operator []=(User user, Duration duration) {
-    var oldDuration = this[user];
-    if (oldDuration != null) {
-      _totalDuration -= oldDuration;
-    }
-    _impl[user.id] = duration;
-    _totalDuration += duration;
+  bool isSameUser(User u) {
+    return user == u;
   }
 }
 
-class DayUserDurationMap {
-  static DateFormat _dateFormat = new DateFormat('yyyy-MM-dd');
-  Map<String, UserDurationMap> _impl = new Map<String, UserDurationMap>();
+class DayUserDurations {
+  DateTime day;
+  List<UserDuration> users = [];
   
-  UserDurationMap getDay(DateTime day, {bool create: false}) {
-    var userMap = this[day];
-    if (userMap != null || !create) {
-      return userMap;
+  DayUserDurations(DateTime date) {
+    // extract day only
+    day = new DateTime(date.year, date.month, date.day);
+    // add default users immediately
+    // TODO: when adding real users, this must be though off better of course
+    for (User u in User.defaultUsers()) {
+      users.add(new UserDuration(u));
     }
-    
-    var dayKey = _dateFormat.format(day);
-    _impl[dayKey] = new UserDurationMap();
-    return _impl[dayKey];
   }
   
-  UserDurationMap operator [](DateTime day) {
-    var dayKey = _dateFormat.format(day);
-    return _impl[dayKey];
+  bool isSameDay(DateTime date) {
+    return date.year == day.year && date.month == day.month && date.day == day.day;
+  }
+  
+  bool operator ==(other) {
+    if (other is DayUserDurations) {
+      return other.day == day;
+    } else {
+      return false;
+    }
   }
 }
 
 /**
  * A view of the Task by day and User.
  */
-class TaskTimeline {
-  static DateFormat _dateFormat = new DateFormat('yyyy-MM-dd');  
-  /**
-   * Internal implementation using DayUserDurationMap. 
-   */
-  DayUserDurationMap _daysMap;
-  
+class TaskTimeline {  
   /**
    * Source data
    */
   Task task;
   /**
-   * Aggregated total duration by user
+   * List of days for which there is at least a timing
    */
-  UserDurationMap userDurations;
-  /**
-   * Set of days in which there is some timing
-   */
-  Set<DateTime> days = new HashSet<DateTime>();
-  
-  Set<String> keys = new HashSet<String>();
-  Map<String, Map<String, Duration>> timeline = new Map<String, Map<String, Duration>>(); 
-  
+  List<DayUserDurations> days = [];
+    
   TaskTimeline(this.task) {
-    _daysMap = new DayUserDurationMap();
     for (Timing t in task.timings) {
-      var dayOnly = new DateTime(t.date.year, t.date.month, t.date.day);
-      days.add(dayOnly);
-      var dayKey = _dateFormat.format(t.date);
-      keys.add(dayKey);
       
-      if (!timeline.containsKey(dayKey)) {
-        timeline[dayKey] = new Map<String, Duration>();
+      DayUserDurations foundDay;
+      for (var day in days) {
+        if (day.isSameDay(t.date)) {
+          foundDay = day;
+          break;
+        }
       }
-      if (!timeline[dayKey].containsKey(t.user)) {
-        timeline[dayKey][t.user.id] = new Duration();  
+      if (foundDay == null) {
+        foundDay = new DayUserDurations(t.date);
+        days.add(foundDay);
       }
-      timeline[dayKey][t.user.id] += t.duration; 
       
-      //var userMap = _daysMap.getDay(t.date, create: true); 
-      //userMap[t.user] = t.duration;
-      //_updateOnChange(t,  userMap);
+      UserDuration foundUser;
+      for (var userDuration in foundDay.users) {
+        if (userDuration.isSameUser(t.user)) {
+          foundUser = userDuration;
+          break;
+        }
+      }
+      
+      foundUser.duration += t.duration;
+      _updateOnChange(t,  foundUser);
     }
   }
   
-  _updateOnChange(Timing t, UserDurationMap userMap) {
+  _updateOnChange(Timing t, UserDuration userDuration) {
     t.durationChanged.stream.listen((ChangeEvent<Duration> event) {
       print("duration changed on timing " + t.id);
-      
-      var userDuration = userMap[t.user];
-      if (userDuration == null) {
-        userDuration = new Duration();
-      }
-      userDuration -= event.oldValue;
-      userDuration += event.newValue;
-      userMap[t.user] = userDuration; 
+      userDuration.duration -= event.oldValue;
+      userDuration.duration += event.newValue; 
      });
   }
-  
-  UserDurationMap operator [](DateTime day) => _daysMap[day];
-  
-   
-  
 }
 
 

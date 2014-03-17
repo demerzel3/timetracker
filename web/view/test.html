@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+
+<html ng-app>
+  <head>
+  	<meta charset="utf-8">
+  	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>test</title>
+  </head>
+ 
+  <body>   
+    <div test-controller>
+      Users: {{ctrl.users}}
+      <ul>
+        <li ng-repeat="user in ctrl.users">
+          {{user['id']}} =&gt; {{user['name']}}
+        </li>
+      </ul>
+      <button ng-click="ctrl.doSomething()">Change Gabriele's name</button>
+    </div>
+    <script type="application/dart" src="../timetracker.dart"></script>
+    <!-- for this next line to work, your pubspec.yaml file must have a dependency on 'browser' -->
+    <script src="packages/browser/dart.js"></script>
+  </body>
+</html>

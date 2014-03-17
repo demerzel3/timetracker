@@ -11,3 +11,5 @@ packages
 *.dart.js.map
 
 *.dart.precompiled.js
+
+/build/
