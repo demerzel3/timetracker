@@ -6,12 +6,12 @@ part of timetracker;
 class HeaderController {
 
   Router _router;
-  LoggedUser loggedUser;
+  Session session;
       
-  HeaderController(this.loggedUser, this._router);
+  HeaderController(this.session, this._router);
 
   signOut() {
-    loggedUser.user = null;
+    session.user = null;
     _router.go('signin', {});
   }
 }

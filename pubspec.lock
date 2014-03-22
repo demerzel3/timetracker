@@ -45,6 +45,10 @@ packages:
     description: intl
     source: hosted
     version: "0.9.7"
+  lawndart:
+    description: lawndart
+    source: hosted
+    version: "0.6.5"
   logging:
     description: logging
     source: hosted

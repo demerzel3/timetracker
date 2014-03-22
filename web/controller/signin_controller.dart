@@ -6,16 +6,16 @@ part of timetracker;
 class SigninController {
 
   Router _router;
-  LoggedUser _loggedUser;
+  Session _session;
   
   List<User> users = User.defaultUsers();
   
   User user;
     
-  SigninController(this._router, this._loggedUser);
+  SigninController(this._router, this._session);
   
   signIn() {
-    _loggedUser.user = user;
+    _session.user = user;
     _router.go('projects', {});
   }
 }

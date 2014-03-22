@@ -14,10 +14,10 @@
       <div class="col-sm-6">
         <h1>TimeTracker</h1>
       </div>
-      <div class="col-sm-6 text-right" ng-if="ctrl.loggedUser.user != null">
+      <div class="col-sm-6 text-right" ng-if="ctrl.session.user != null">
         <div class="face">
-          <img ng-src="{{ctrl.loggedUser.user.avatarUrl}}"/>
-          <span ng-bind-template="{{ctrl.loggedUser.user.name}}"></span>
+          <img ng-src="{{ctrl.session.user.avatarUrl}}"/>
+          <span ng-bind-template="{{ctrl.session.user.name}}"></span>
         </div>
         <button class="btn btn-xs" ng-click="ctrl.signOut()">Logout</button>
       </div>
