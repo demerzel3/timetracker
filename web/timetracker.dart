@@ -72,11 +72,11 @@ class TTRouter {
    */  
   _authenticatedFirewall(Router router) {
     return (RoutePreEnterEvent e) {
-      e.allowEnter(_session.isAuthenticated().then((isAuthenticated) {
-        if (!isAuthenticated) {
+      e.allowEnter(_session.isLoading().then((_) {
+        if (!_session.isAuthenticated) {
           router.go('signin', {});
         }
-        return isAuthenticated;
+        return _session.isAuthenticated;
       }));
     };
   }
@@ -87,18 +87,18 @@ class TTRouter {
    */
   _anonymousFirewall(Router router) {
     return (RoutePreEnterEvent e) {
-      e.allowEnter(_session.isAuthenticated().then((isAuthenticated) {
-        if (isAuthenticated) {
+      e.allowEnter(_session.isLoading().then((_) {
+        if (_session.isAuthenticated) {
           router.go('projects', {});
         }
-        return !isAuthenticated;
+        return !_session.isAuthenticated;
       }));
     };    
   }
 }
 
 class TimeTrackerModule extends Module {
-  TimeTrackerModule(Store sessionStore) {
+  TimeTrackerModule() {
     type(LoggedUser);
     
     type(HeaderController);
@@ -113,7 +113,10 @@ class TimeTrackerModule extends Module {
     type(DurationFilter);
     type(FloorFilter);
     
-    factory(Session, (Injector injector) => new Session(sessionStore));
+    factory(Session, (Injector injector) {
+      var store = new Store('timetracker', 'session');      
+      return new Session(store); 
+    });
     
     type(RouteInitializerFn, implementedBy: TTRouter);
     factory(NgRoutingUsePushState,
@@ -128,11 +131,7 @@ class TimeTrackerModule extends Module {
 }
 
 void main() {
-  // open session store
-  var store = new Store('timetracker', 'session');
-  store.open().then((_) {
-    // bootstrap angular
-    ngBootstrap(module: new TimeTrackerModule(store));
-  });  
+  // bootstrap angular
+  ngBootstrap(module: new TimeTrackerModule());
 }
 

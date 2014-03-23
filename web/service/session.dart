@@ -6,7 +6,11 @@ class Session {
   async.Future _loading;
   
   Session(this._store) {
-    _loading = _load();
+    if (_store.isOpen) {
+      _loading = _load();  
+    } else {
+      _loading = _store.open().then((_) => _load);
+    }
   }
   
   _load() {
@@ -30,16 +34,9 @@ class Session {
     });
   }
 
-  async.Future<bool> isAuthenticated() {
-    var completer = new async.Completer<bool>();
-    _loading.then((_) {
-      completer.complete(_user != null);
-    });
-    completer.future.then((isAuthenticated) {
-      print("isAuthenticated " + isAuthenticated.toString());
-    });
-    return completer.future;
-  }
+  async.Future isLoading() => _loading;
+  
+  bool get isAuthenticated => _user != null;
 
   User get user => _user;
   
