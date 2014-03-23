@@ -31,9 +31,14 @@ class Session {
   }
 
   async.Future<bool> isAuthenticated() {
-    return _loading.then((_) {
-      return _user != null;
+    var completer = new async.Completer<bool>();
+    _loading.then((_) {
+      completer.complete(_user != null);
     });
+    completer.future.then((isAuthenticated) {
+      print("isAuthenticated " + isAuthenticated.toString());
+    });
+    return completer.future;
   }
 
   User get user => _user;

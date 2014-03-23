@@ -51,41 +51,50 @@ class TTRouter {
       ..addRoute(
         name: 'signin',
         path: '/signin',
-        enter: anonView(router, views, 'view/signin.html'))
+        preEnter: _anonymousFirewall(router),
+        enter: views('view/signin.html'))
       ..addRoute(
         name: 'project',
         path: '/projects/:projectId',
-        enter: userView(router, views, 'view/project.html'))
+        preEnter: _authenticatedFirewall(router),
+        enter: views('view/project.html'))
       ..addRoute(
         name: 'projects',
         defaultRoute: true,
         path: '/',
-        enter: userView(router, views, 'view/projects.html'));
+        preEnter: _authenticatedFirewall(router),
+        enter: views('view/projects.html')/*userView(router, views, 'view/projects.html')*/);
   }
-  
-  anonView(Router router, ViewFactory views, String view) {
-    return (RouteEvent e) {
-      _session.isAuthenticated().then((bool isAuthenticated) {
-        if (isAuthenticated) {
-          router.go('projects', {});
-        } else {
-          views(view)(e);    
-        }
-      });
-    };    
-  }
-  
-  userView(Router router, ViewFactory views, String view) {
-    return (RouteEvent e) {
-      _session.isAuthenticated().then((bool isAuthenticated) {
+
+  /**
+   * Returns a RoutePreEnterEventHandler that allows entry for authenticated users only,
+   * redirecting anonymous users to "/projects"
+   */  
+  _authenticatedFirewall(Router router) {
+    return (RoutePreEnterEvent e) {
+      e.allowEnter(_session.isAuthenticated().then((isAuthenticated) {
         if (!isAuthenticated) {
           router.go('signin', {});
-        } else {
-          views(view)(e);    
         }
-      });
+        return isAuthenticated;
+      }));
+    };
+  }
+  
+  /**
+   * Returns a RoutePreEnterEventHandler that allows entry for anonymous users only,
+   * redirecting authenticated users to "/projects"
+   */
+  _anonymousFirewall(Router router) {
+    return (RoutePreEnterEvent e) {
+      e.allowEnter(_session.isAuthenticated().then((isAuthenticated) {
+        if (isAuthenticated) {
+          router.go('projects', {});
+        }
+        return !isAuthenticated;
+      }));
     };    
-  }  
+  }
 }
 
 class TimeTrackerModule extends Module {
