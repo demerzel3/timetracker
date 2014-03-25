@@ -5,7 +5,7 @@
     <div class="col-md-12">
       <h2>Sign In</h2>
 
-      <form role="form" ng-submit="ctrl.signIn()">
+      <form class="form-inline" role="form" ng-submit="ctrl.signIn()">
         <div class="face-chooser">
           <div class="face inline" ng-class="{selected: ctrl.user == user}" 
                ng-repeat="user in ctrl.users" 
@@ -22,7 +22,12 @@
           <option ng-repeat="user in ctrl.users" ng-value="user">{{user.name}}</option>
         </select>
         -->
-          
+
+        <div class="form-group" class="col-md-4">
+          <select class="form-control" ng-model="ctrl.endpoint">
+            <option ng-repeat="endpoint in ctrl.availableEndpoints" ng-value="endpoint">{{endpoint.name}} ({{endpoint.url}})</option>
+          </select>
+        </div>          
         <div class="form-group">
           <button type="submit" ng-disabled="ctrl.user == null" class="btn btn-primary"><i class="fa fa-sign-in"></i> Sign In</button>
         </div>          

@@ -47,37 +47,31 @@ class TTRouter {
   TTRouter(this._session);
   
   void call(Router router, ViewFactory views) {
-    router.root
-      ..addRoute(
-        name: 'signin',
-        path: '/signin',
-        preEnter: _anonymousFirewall(router),
-        enter: views('view/signin.html'))
-      ..addRoute(
-        name: 'project',
-        path: '/projects/:projectId',
-        preEnter: _authenticatedFirewall(router),
-        enter: views('view/project.html'))
-      ..addRoute(
-        name: 'projects',
-        defaultRoute: true,
-        path: '/',
-        preEnter: _authenticatedFirewall(router),
-        enter: views('view/projects.html')/*userView(router, views, 'view/projects.html')*/);
+    views.configure({
+      'signin': ngRoute(
+          path: '/signin',
+          enter: _anonymousFirewall(router, views, 'view/signin.html')),
+      'project': ngRoute(
+          path: '/projects/:projectId',
+          enter: _authenticatedFirewall(router, views, 'view/project.html')),
+      'projects': ngRoute(
+          defaultRoute: true,
+          path: '/projects',
+          enter: _authenticatedFirewall(router, views, 'view/projects.html')),
+    });
   }
 
   /**
    * Returns a RoutePreEnterEventHandler that allows entry for authenticated users only,
    * redirecting anonymous users to "/projects"
    */  
-  _authenticatedFirewall(Router router) {
-    return (RoutePreEnterEvent e) {
-      e.allowEnter(_session.isLoading().then((_) {
-        if (!_session.isAuthenticated) {
-          router.go('signin', {});
-        }
-        return _session.isAuthenticated;
-      }));
+  _authenticatedFirewall(Router router, ViewFactory views, String viewName) {
+    return (RouteEnterEvent e) {
+      if (!_session.isAuthenticated) {
+        router.go('signin', {});
+      } else {
+        return views(viewName)(e);
+      }
     };
   }
   
@@ -85,20 +79,19 @@ class TTRouter {
    * Returns a RoutePreEnterEventHandler that allows entry for anonymous users only,
    * redirecting authenticated users to "/projects"
    */
-  _anonymousFirewall(Router router) {
-    return (RoutePreEnterEvent e) {
-      e.allowEnter(_session.isLoading().then((_) {
-        if (_session.isAuthenticated) {
-          router.go('projects', {});
-        }
-        return !_session.isAuthenticated;
-      }));
+  _anonymousFirewall(Router router, ViewFactory views, String viewName) {
+    return (RouteEnterEvent e) {
+      if (_session.isAuthenticated) {
+        return router.go('projects', {});
+      } else {
+        return views(viewName)(e);
+      }
     };    
   }
 }
 
 class TimeTrackerModule extends Module {
-  TimeTrackerModule() {
+  TimeTrackerModule(Session session) {
     type(LoggedUser);
     
     type(HeaderController);
@@ -113,25 +106,32 @@ class TimeTrackerModule extends Module {
     type(DurationFilter);
     type(FloorFilter);
     
-    factory(Session, (Injector injector) {
-      var store = new Store('timetracker', 'session');      
-      return new Session(store); 
-    });
-    
+    value(Session, session);
+        
     type(RouteInitializerFn, implementedBy: TTRouter);
     factory(NgRoutingUsePushState,
         (_) => new NgRoutingUsePushState.value(false));
     
     factory(ProjectsClient, (Injector injector) {
-      return new ProjectsClient(injector.get(Http), 'http://127.0.0.1:5984');
+      var client = new ProjectsClient(injector.get(Http), session.endpointUrl);
+      
+      // aggiorna server url ogni volta che cambia sessionUrl in session
+      session.endpointUrlChanged.listen((_) => client.serverUrl = session.endpointUrl);      
+      
+      return client; 
       // http://192.168.230.230/
       //return new ProjectsClient(injector.get(Http), 'http://192.168.230.230:5984');
     });
+    
   }
 }
 
 void main() {
-  // bootstrap angular
-  ngBootstrap(module: new TimeTrackerModule());
+  // load session and then bootstrap angular
+  var session = new Session(new Store('timetracker', 'session'));
+  session.isLoading().then((_) {
+    // bootstrap angular
+    ngBootstrap(module: new TimeTrackerModule(session));    
+  });
 }
 

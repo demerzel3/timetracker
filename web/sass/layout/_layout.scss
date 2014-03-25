@@ -1,0 +1,115 @@
+
+@mixin flex-container() {
+  display: -webkit-flex;
+  display: flex;
+  
+  -webkit-flex-wrap: nowrap;
+  flex-wrap: nowrap;
+}
+
+@mixin flex-direction($direction) {
+  -webkit-flex-direction: $direction;
+  flex-direction: $direction;
+}
+
+/**
+ * $justify = flex-start | flex-end | center | space-between | space-around
+ */
+@mixin justify-content($justify) {
+  -webkit-justify-content: $justify;
+  justify-content: $justify;
+}
+
+/**
+ * $align = flex-start | flex-end | center | baseline | stretch
+ */
+@mixin align-items($align) {
+  -webkit-align-items: $align;
+  align-items: $align;
+}
+
+/**
+ * $align = auto | flex-start | flex-end | center | baseline | stretch
+ */
+@mixin align-self($align) {
+  -webkit-align-self: $align;
+  align-self: $align;
+}
+@mixin flex-grow($value) {
+  -webkit-flex-grow: $value;
+  flex-grow: $value;
+}
+@mixin flex-shrink($value) {
+  -webkit-flex-shrink: $value;
+  flex-shrink: $value;
+}
+@mixin order($order) {
+  -webkit-order: $order;
+  order: $order;
+}
+
+[layout="flex"] {
+  @include flex-container;
+}
+[layout="hflex"] {
+  @include flex-container;
+  @include flex-direction(row);  
+}
+[layout="vflex"] {
+  @include flex-container;
+  @include flex-direction(column);  
+}
+
+[direction="row"] { @include flex-direction(row) }
+[direction="column"] { @include flex-direction(column) }
+
+[justify="start"] { @include justify-content(flex-start) }
+[justify="end"] { @include justify-content(flex-end) }
+[justify="center"] { @include justify-content(center) }
+[justify="space-between"] { @include justify-content(space-between) }
+[justify="space-around"] { @include justify-content(space-around) }
+
+[align-items="start"] { @include align-items(flex-start) }
+[align-items="end"] { @include align-items(flex-end) }
+[align-items="center"] { @include align-items(center) }
+[align-items="baseline"] { @include align-items(baseline) }
+[align-items="stretch"] { @include align-items(stretch) }
+
+[align="start"] { @include align-self(flex-start) }
+[align="end"] { @include align-self(flex-end) }
+[align="center"] { @include align-self(center) }
+[align="baseline"] { @include align-self(baseline) }
+[align="stretch"] { @include align-self(stretch) }
+
+[order="0"] { @include order(0) }
+[order="1"] { @include order(1) }
+[order="2"] { @include order(2) }
+[order="3"] { @include order(3) }
+[order="4"] { @include order(4) }
+[order="5"] { @include order(5) }
+[order="6"] { @include order(6) }
+[order="7"] { @include order(7) }
+[order="8"] { @include order(8) }
+[order="9"] { @include order(9) }
+
+[grow="0"] { @include flex-grow(0) }
+[grow="1"] { @include flex-grow(1) }
+[grow="1.5"] { @include flex-grow(1.5) }
+[grow="2"] { @include flex-grow(2) }
+[shrink="0"] { @include flex-shrink(0) }
+[shrink="1"] { @include flex-shrink(1) }
+[shrink="1.5"] { @include flex-shrink(1.5) }
+[shrink="2"] { @include flex-shrink(2) }
+
+[scrollable="vertical"] {
+  position: relative;
+  & > [scrollable-content] {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    overflow-x: hidden;
+    overflow-y: auto;
+  }
+}

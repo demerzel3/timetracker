@@ -1,0 +1,169 @@
+.face {
+  text-align: center;
+  padding-bottom: 5px;
+  /*background-color: #f6f6f6; /**/
+  border-top-left-radius: 48px;
+  border-top-right-radius: 48px;
+  border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 10px;
+}
+.face.inline {
+  display: inline-block;
+}
+.face img {
+  width: 96px;
+  height: 96px;
+  border-radius: 48px;
+  line-break: after;
+  display: block;
+  padding: 8px;
+}
+
+.header .face {
+  display: inline-block;
+  padding-bottom: 0;
+}
+.header .face img {
+  display: inline;
+  width: 24px;
+  height: 24px;
+  border-radius: 12px;
+  padding: 0;
+}
+
+.face-chooser {
+  margin-bottom: 15px;
+}
+.face-chooser .face {
+  margin-left: 15px;
+  opacity: 0.7;
+  cursor: pointer;
+  /*border: solid 1px transparent; /**/
+  background-color: white;
+  -webkit-transition: opacity 0.2s ease-out, background-color 0.2s ease-out, border-color 0.2s ease-out;
+}
+.face-chooser .face img {
+}
+.face-chooser .face:first-child {
+  margin-left: 0;
+}
+.face-chooser .face.selected {
+  opacity: 1;
+  background-color: #f3f3f3;
+  /*border: solid 1px #ccc; /**/
+  /*color: white; /**/
+}
+.face-chooser .face.selected img {
+}
+
+/* ANIMATIONS */
+@-webkit-keyframes fadeInOut {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+@-moz-keyframes fadeInOut {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+@-o-keyframes fadeInOut {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+@keyframes fadeInOut {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+
+a[ng-click] {
+  cursor: pointer;
+}
+
+a.link-sm {
+  font-size: 0.9em;
+}
+
+.header {
+  background-color: #565656;
+  padding: 8px 10px;
+  color: white;
+}
+.header h1 {
+  font-size: 1.1em;
+  font-weight: normal;  
+  margin: 0;
+  line-height: 24px;
+}
+
+.navigation {
+  background-color: #f6f6f6;
+  padding: 8px 10px;
+  margin-bottom: 10px;
+  line-height: 30px;
+}
+
+.list-group-item.selectable {
+  cursor: pointer;
+}
+.list-group-item.active {
+  background-color: #428bca;
+  border-color: #428bca;
+  color: white;
+}
+.list-group-item.active + .list-group-item {
+  border-top: none;
+  padding-top: 11px;
+}
+
+.list-group-item.active > .badge {
+  color: #428bca;
+  background-color: #fff;
+}
+.list-group-item > .actions {
+  visibility: hidden;
+  float: right;
+}
+.list-group-item.active > .actions,
+.list-group-item:hover > .actions {
+  visibility: visible;
+}
+.list-group-item.active > .actions > a {
+  color: white;
+}
+
+.fa-stack.timer {
+  width: 1em;
+  height: 1em;
+  line-height: 1em;
+}
+.fa-stack.timer > i.fa-circle {
+  -webkit-animation: fadeInOut 1s infinite alternate;
+  -moz-animation: fadeInOut 1s infinite alternate;
+  -ms-animation: fadeInOut 1s infinite alternate;
+}
+.fa-stack.timer > i.fa-circle-o {
+  opacity: 0.2;
+}
+
+.jumbotron-timer {
+  padding: 30px;
+}
+.jumbotron-timer h1 {
+  margin: 0;
+}

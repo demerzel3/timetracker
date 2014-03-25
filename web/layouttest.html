@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+  	<meta charset="utf-8">
+  	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>layouttest</title>
+    <link rel="stylesheet" href="packages/bootjack/css/bootstrap.min.css">
+    <link rel="stylesheet" href="bower_components/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="css/main.css">
+    <style type="text/css">
+      html, body {
+        margin: 0;
+        padding: 0;
+        width: 100%;
+        height: 100%;
+      }
+      .content {
+        width: 1170px;
+        background-color: #f6f6f6;
+      }
+      .red, .green, .blue {
+        color: white;
+        padding: 20px;
+      }
+      .red {
+        background-color: #db0000;
+      }
+      .green {
+        background-color: #00bd00;
+      }
+      .blue {
+        background-color: #0000bd;
+      }
+    </style>
+  </head>
+ 
+  <body layout="hflex" justify="center" >
+    <div class="content" layout="hflex" justify="space-around" align-items="center">
+      <div class="red" shrink="0">RED</div>
+      <div class="green" style="font-size: 2em;" grow="1" align="stretch" scrollable="vertical">
+        <div scrollable-content>
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla viverra augue eu diam ultrices gravida. Morbi faucibus euismod enim, eget placerat sapien ornare eget. Nunc sed rutrum massa, quis pellentesque lacus. Pellentesque sed justo id sem fermentum porta. Aliquam ut tristique nisi, vel auctor risus. Praesent vulputate accumsan odio vel pharetra. In consectetur enim sit amet mi aliquam consequat.<br/>
+          Duis cursus rhoncus arcu. Nullam id pharetra odio. Nullam lacus mi, tempus non erat nec, posuere dictum enim. Sed eget orci vel elit faucibus suscipit. Donec neque justo, lobortis at sodales sed, gravida mattis massa. Ut ac quam vitae ligula consectetur tincidunt. Donec dignissim, odio adipiscing fringilla congue, mi tortor molestie massa, ut interdum est lorem eu tellus. Quisque consectetur vulputate nulla, non dictum nisi sollicitudin sit amet. Cras euismod sodales felis, sit amet blandit nulla pellentesque vitae. Nunc cursus, augue faucibus rutrum vulputate, enim dolor volutpat lacus, interdum hendrerit neque nulla sit amet leo.<br/>
+          Sed at diam scelerisque, sollicitudin nunc sed, aliquam metus. Pellentesque laoreet ornare risus, non lobortis orci imperdiet et. Pellentesque tempus placerat arcu at tristique. Duis et mi non elit pellentesque ultrices non nec nunc. Donec varius ante et diam lacinia fermentum. Vivamus orci quam, convallis id consequat vel, blandit at justo. In quis lobortis turpis.<br/>
+          Quisque venenatis mi ac justo pellentesque, nec pretium orci sagittis. Pellentesque pellentesque est sit amet magna tincidunt hendrerit. Phasellus eget volutpat felis, id vehicula velit. Integer consequat, eros et feugiat pellentesque, nulla diam feugiat tellus, rhoncus interdum lorem ligula suscipit nulla. Integer tortor risus, pharetra in neque condimentum, fringilla lobortis est. Sed nec odio tincidunt, feugiat tellus ut, consequat magna. Vivamus eu arcu tincidunt, cursus tellus sed, ultricies quam. Mauris at blandit orci. Fusce sodales vehicula vehicula. Fusce congue ac risus et tincidunt.<br/>
+          Morbi ac eros a justo egestas pretium et ac nulla. Phasellus nibh arcu, facilisis vitae turpis id, commodo pharetra tellus. In mauris arcu, posuere vitae mollis ac, vulputate vitae massa. Curabitur in nibh nibh. Mauris ut porta tortor. Proin nec eros dignissim, fermentum leo blandit, pharetra libero. Nam cursus odio sed enim porta, sit amet tempor arcu suscipit. Phasellus tincidunt sed libero quis consequat. Sed varius turpis eget malesuada malesuada. Nullam lobortis, velit sit amet aliquet varius, libero diam egestas risus, sed sodales risus dui eu diam. Ut id nisl quam. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas.<br/>
+        </div>
+      </div>
+      <div class="blue" align="stretch" shrink="0" layout="vflex" justify="center">BLUE<br/>BLUE2</div>
+    </div>
+  </body>
+</html>

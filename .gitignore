@@ -13,3 +13,5 @@ packages
 *.dart.precompiled.js
 
 /build/
+
+/web/.sass-cache/

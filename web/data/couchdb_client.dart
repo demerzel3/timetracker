@@ -12,8 +12,12 @@ class CouchDbClient<Model> {
   
   CouchDbClient(this._http, this._serverUrl, this._dbName, this._modelConstructor);
   
-  int get lastSeq {
-    return _lastSeq;
+  int get lastSeq => _lastSeq;
+  
+  String get serverUrl => _serverUrl;
+  set serverUrl(String serverUrl) {
+    _serverUrl = serverUrl;
+    _lastSeq = 0;
   }
   
   async.Future<List<Model>> getAll() {
