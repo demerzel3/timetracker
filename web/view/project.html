@@ -1,10 +1,9 @@
-<div project-controller>
+<vflex project-controller grow="1" layout="vflex">
 
-  <div class="row navigation" ng-if="ctrl.project != null">
-    <div class="col-md-4">
-      <a href="#/"><i class="fa fa-angle-left"></i> Projects</a>
-    </div>
-    <div class="col-md-4 text-center">
+  <hflex class="navigation" ng-if="ctrl.project != null" 
+       justify="space-between" align-items="center">
+    <a href="#/"><i class="fa fa-angle-left"></i> Projects</a>
+    <div>
       {{ctrl.project.name}}
       &emsp;
       <span class="badge">
@@ -12,174 +11,176 @@
         <span ng-if="ctrl.project.totalEstimate != null">/ {{ctrl.project.totalEstimate|floor}}:00</span>
       </span>
     </div>
-    <div class="col-md-4 text-right">
-      <button type="button" class="btn btn-default btn-sm"
-              ng-disabled="ctrl.project.deletedTasks.length == 0"
-              ng-click="ctrl.showTasksBin()">
-        <i class="fa fa-lg fa-trash-o"></i> {{ctrl.project.deletedTasks.length}}
-      </button>    
-    </div>
-  </div>
+    <button type="button" class="btn btn-default btn-sm"
+            ng-disabled="ctrl.project.deletedTasks.length == 0"
+            ng-click="ctrl.showTasksBin()">
+      <i class="fa fa-lg fa-trash-o"></i> {{ctrl.project.deletedTasks.length}}
+    </button>    
+  </hflex>
 
-  <div class="row">
-    <div class="col-md-6" ng-if="ctrl.project != null">
-      <div class="list-group tasks-list">
-        <div ng-repeat="task in ctrl.project.tasks" 
-             ng-class="{'active': ctrl.selectedTask == task}" 
-             ng-click="ctrl.selectTask(task)"
-             class="list-group-item selectable" draggable="true">
-          <strong>{{$index+1}})</strong> {{task.name}}
-          <span class="actions">
-            &emsp;
-            <!-- <a href=""><i class="fa fa-pencil"></i></a> editing is just not implemented yet -->
-            <a href="" ng-click="ctrl.deleteTask(task)"><i class="fa fa-times"></i></a>
-          </span>
-          <span class="badge">
-            <span class="fa-stack timer" ng-if="ctrl.activeTiming != null && ctrl.activeTiming.task == task">
-              <i class="fa fa-circle-o fa-stack-1x"></i>
-              <i class="fa fa-circle fa-stack-1x"></i>
-            </span>          
-            <i class="fa fa-clock-o" ng-if="ctrl.activeTiming == null || ctrl.activeTiming.task != task"></i>
-            &emsp;
-            {{task.totalDuration|duration:'h:mm|&minus;'}}
-            <span ng-if="task.estimate != null">/ {{task.estimate|floor}}:00</span>
-          </span>
-        </div>
-        <div class="list-group-item">
-          <form name="newTaskForm" class="form-horizontal" role="form" ng-submit="ctrl.createNewTask()">
-            <div class="form-group">
-              <label class="sr-only" for="newTaskNameBox">Task name</label>
-              <div ng-class="{'col-sm-12': ctrl.newTask.name.length == 0, 'col-sm-7': ctrl.newTask.name.length > 0}">
-                <input id="newTaskNameBox" class="form-control" type="text" ng-model="ctrl.newTask.name" placeholder="New Task" />
-              </div>
-              <div ng-if="ctrl.newTask.name.length > 0">
-                <label class="col-sm-3 control-label" for="newTaskEstimateBox">Est. Duration</label>
-                <div class="col-sm-2">
-                  <input type="number" class="form-control" id="newTaskEstimateBox" ng-model="ctrl.newTask.estimate" placeholder="h"/>
-                </div>
-              </div>
-            </div>
-            <div class="form-group" ng-if="ctrl.newTask.name.length > 0">
-              <div class="col-sm-12 text-right">
-                <button type="submit" class="btn btn-primary"> <i class="fa fa-plus"></i> Add</button>
-              </div>
-            </div>                        
-          </form>
-        </div>
-      </div>
-    </div>
-
-    <div class="col-md-6" ng-if="ctrl.selectedTask != null">
-    
-      <table class="table">
-        <thead>
-          <tr>
-            <th></th>
-            <th ng-repeat="user in ctrl.users" class="text-center">
-              <div class="face inline">
-                <img ng-src="{{user.avatarUrl}}"/>
-                {{user.name}}
-              </div>          
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr ng-repeat="day in ctrl.selectedTaskTimeline.days">
-            <td>{{day.day|date:'dd/MM/yyyy'}}</td>
-            <td ng-repeat="userDuration in day.users" class="text-center">
-              {{ userDuration.duration|duration:'hh:mm|&minus;' }}
-            </td>
-          </tr>
-        </tbody>
-      </table>
-        
-      <div class="jumbotron jumbotron-timer" ng-if="ctrl.activeTiming == null">
-        <a class="pull-right btn btn-success btn-lg" style="margin-top: 9px" role="button" 
-           ng-click="ctrl.startTimer()">
-          <i class="fa fa-play"></i>&emsp;Start
-        </a>
-        <h1>00:00:00</h1>        
-      </div>
-
-      <div class="jumbotron jumbotron-timer" ng-if="ctrl.activeTiming != null && ctrl.activeTiming.task == ctrl.selectedTask">
-        <a class="pull-right btn btn-danger btn-lg" style="margin-top: 9px" role="button"
-           ng-click="ctrl.stopTimer()">
-          <i class="fa fa-stop"></i>&emsp;Stop
-        </a>
-        <h1>{{ctrl.activeTiming.duration|duration:'hh:mm:ss'}}</h1>
-      </div>
-    
-      <table class="table table-striped" ng-if="ctrl.selectedTask.timings.length > 0">
-        <thead>
-          <tr>
-            <th>Data</th>
-            <th>Persona</th>
-            <th>Durata (h)</th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr ng-repeat="timing in ctrl.selectedTask.timings">
-            <td style="width: 33%">
-              {{timing.date|date:'dd/MM/yyyy'}}
-            </td>
-            <td style="width: 33%">
-              {{timing.user.name}}
-            </td>
-            <td style="width: 33%">
-              {{timing.duration|duration:'hh:mm'}}
-            </td>
-            <td class="text-right" style="width: 20px;">
-              <span class="fa-stack timer" ng-if="ctrl.activeTiming == timing">
+  <hflex grow="1">
+    <vflex grow="1">
+      <div grow="1" ng-if="ctrl.project != null" scrollable="vertical">
+        <div class="list-group tasks-list" scrollable-content>
+          <div ng-repeat="task in ctrl.project.tasks" 
+               ng-class="{'active': ctrl.selectedTask == task}" 
+               ng-click="ctrl.selectTask(task)"
+               class="list-group-item selectable" draggable="true">
+            <strong>{{$index+1}})</strong> {{task.name}}
+            <span class="actions">
+              &emsp;
+              <!-- <a href=""><i class="fa fa-pencil"></i></a> editing is just not implemented yet -->
+              <a href="" ng-click="ctrl.deleteTask(task)"><i class="fa fa-times"></i></a>
+            </span>
+            <span class="badge">
+              <span class="fa-stack timer" ng-if="ctrl.activeTiming != null && ctrl.activeTiming.task == task">
                 <i class="fa fa-circle-o fa-stack-1x"></i>
                 <i class="fa fa-circle fa-stack-1x"></i>
-              </span>                      
-            </td>
-          </tr>          
-        </tbody>
-      </table>
-      
-      <form role="form" class="form-horizontal" ng-submit="ctrl.createNewTiming()">
-        <div class="form-group">
-          <div ng-if="!ctrl.timingFormFocused" class="col-sm-12">
-            <label class="sr-only" for="newTimingBox">Create new timing</label>
-            <input id="newTimingBox" class="form-control" type="text" placeholder="New Timing" 
-                   ng-focus="ctrl.newTimingBoxFocusIn()"/>
+              </span>          
+              <i class="fa fa-clock-o" ng-if="ctrl.activeTiming == null || ctrl.activeTiming.task != task"></i>
+              &emsp;
+              {{task.totalDuration|duration:'h:mm|&minus;'}}
+              <span ng-if="task.estimate != null">/ {{task.estimate|floor}}:00</span>
+            </span>
           </div>
-          <div ng-if="ctrl.timingFormFocused">
-            <div class="col-sm-4">
-              <input type="date" class="form-control" id="dateBox" size="10" 
-                ng-model="ctrl.newTiming.date"
-                ng-focus="ctrl.timingInputFocusIn()" ng-blur="ctrl.timingInputFocusOut()"
-                required>            
-            </div>
-            <div class="col-sm-4">
-              <select id="userBox" class="form-control" ng-model="ctrl.newTiming.user"
-                ng-focus="ctrl.timingInputFocusIn()" ng-blur="ctrl.timingInputFocusOut()" 
-                required>
-                <option disabled selected value="">Scegli...</option>
-                <option ng-repeat="user in ctrl.users" ng-value="user">{{user.name}}</option>
-              </select>
-            </div>
-            <div class="col-sm-4">
-              <input type="time" id="durationBox" 
-                class="form-control" ng-model="ctrl.newTiming.duration" placeholder="HH:MM" size="5" required
-                ng-focus="ctrl.timingInputFocusIn()" ng-blur="ctrl.timingInputFocusOut()" />
+        </div>
+      </div>
+      
+      <form name="newTaskForm" class="form-horizontal" role="form" ng-submit="ctrl.createNewTask()">
+        <div class="form-group">
+          <label class="sr-only" for="newTaskNameBox">Task name</label>
+          <div ng-class="{'col-sm-12': ctrl.newTask.name.length == 0, 'col-sm-7': ctrl.newTask.name.length > 0}">
+            <input id="newTaskNameBox" class="form-control" type="text" ng-model="ctrl.newTask.name" placeholder="New Task" />
+          </div>
+          <div ng-if="ctrl.newTask.name.length > 0">
+            <label class="col-sm-3 control-label" for="newTaskEstimateBox">Est. Duration</label>
+            <div class="col-sm-2">
+              <input type="number" class="form-control" id="newTaskEstimateBox" ng-model="ctrl.newTask.estimate" placeholder="h"/>
             </div>
           </div>
         </div>
-        <div class="form-group" ng-if="ctrl.timingFormFocused">
+        <div class="form-group" ng-if="ctrl.newTask.name.length > 0">
           <div class="col-sm-12 text-right">
-            <button type="submit" class="btn btn-primary"
-                    ng-focus="ctrl.timingInputFocusIn()" ng-blur="ctrl.timingInputFocusOut()">
-              <i class="fa fa-plus"></i> Add
-            </button>
+            <button type="submit" class="btn btn-primary"> <i class="fa fa-plus"></i> Add</button>
           </div>
         </div>                        
-      </form>        
-    </div>
+      </form>
+    </vflex>
 
-  </div>
+    <div grow="1" ng-if="ctrl.selectedTask == null"></div>
+    <div grow="1" ng-if="ctrl.selectedTask != null" scrollable="vertical">
+    
+      <scrollable-content>
+        <table class="table">
+          <thead>
+            <tr>
+              <th></th>
+              <th ng-repeat="user in ctrl.users" class="text-center">
+                <div class="face inline">
+                  <img ng-src="{{user.avatarUrl}}"/>
+                  {{user.name}}
+                </div>          
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr ng-repeat="day in ctrl.selectedTaskTimeline.days">
+              <td>{{day.day|date:'dd/MM/yyyy'}}</td>
+              <td ng-repeat="userDuration in day.users" class="text-center">
+                {{ userDuration.duration|duration:'hh:mm|&minus;' }}
+              </td>
+            </tr>
+          </tbody>
+        </table>
+          
+        <div class="jumbotron jumbotron-timer" ng-if="ctrl.activeTiming == null">
+          <a class="pull-right btn btn-success btn-lg" style="margin-top: 9px" role="button" 
+             ng-click="ctrl.startTimer()">
+            <i class="fa fa-play"></i>&emsp;Start
+          </a>
+          <h1>00:00:00</h1>        
+        </div>
+  
+        <div class="jumbotron jumbotron-timer" ng-if="ctrl.activeTiming != null && ctrl.activeTiming.task == ctrl.selectedTask">
+          <a class="pull-right btn btn-danger btn-lg" style="margin-top: 9px" role="button"
+             ng-click="ctrl.stopTimer()">
+            <i class="fa fa-stop"></i>&emsp;Stop
+          </a>
+          <h1>{{ctrl.activeTiming.duration|duration:'hh:mm:ss'}}</h1>
+        </div>
+      
+        <table class="table table-striped" ng-if="ctrl.selectedTask.timings.length > 0">
+          <thead>
+            <tr>
+              <th>Data</th>
+              <th>Persona</th>
+              <th>Durata (h)</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr ng-repeat="timing in ctrl.selectedTask.timings">
+              <td style="width: 33%">
+                {{timing.date|date:'dd/MM/yyyy'}}
+              </td>
+              <td style="width: 33%">
+                {{timing.user.name}}
+              </td>
+              <td style="width: 33%">
+                {{timing.duration|duration:'hh:mm'}}
+              </td>
+              <td class="text-right" style="width: 20px;">
+                <span class="fa-stack timer" ng-if="ctrl.activeTiming == timing">
+                  <i class="fa fa-circle-o fa-stack-1x"></i>
+                  <i class="fa fa-circle fa-stack-1x"></i>
+                </span>                      
+              </td>
+            </tr>          
+          </tbody>
+        </table>
+        
+        <form role="form" class="form-horizontal" ng-submit="ctrl.createNewTiming()">
+          <div class="form-group">
+            <div ng-if="!ctrl.timingFormFocused" class="col-sm-12">
+              <label class="sr-only" for="newTimingBox">Create new timing</label>
+              <input id="newTimingBox" class="form-control" type="text" placeholder="New Timing" 
+                     ng-focus="ctrl.newTimingBoxFocusIn()"/>
+            </div>
+            <div ng-if="ctrl.timingFormFocused">
+              <div class="col-sm-4">
+                <input type="date" class="form-control" id="dateBox" size="10" 
+                  ng-model="ctrl.newTiming.date"
+                  ng-focus="ctrl.timingInputFocusIn()" ng-blur="ctrl.timingInputFocusOut()"
+                  required>            
+              </div>
+              <div class="col-sm-4">
+                <select id="userBox" class="form-control" ng-model="ctrl.newTiming.user"
+                  ng-focus="ctrl.timingInputFocusIn()" ng-blur="ctrl.timingInputFocusOut()" 
+                  required>
+                  <option disabled selected value="">Scegli...</option>
+                  <option ng-repeat="user in ctrl.users" ng-value="user">{{user.name}}</option>
+                </select>
+              </div>
+              <div class="col-sm-4">
+                <input type="time" id="durationBox" 
+                  class="form-control" ng-model="ctrl.newTiming.duration" placeholder="HH:MM" size="5" required
+                  ng-focus="ctrl.timingInputFocusIn()" ng-blur="ctrl.timingInputFocusOut()" />
+              </div>
+            </div>
+          </div>
+          <div class="form-group" ng-if="ctrl.timingFormFocused">
+            <div class="col-sm-12 text-right">
+              <button type="submit" class="btn btn-primary"
+                      ng-focus="ctrl.timingInputFocusIn()" ng-blur="ctrl.timingInputFocusOut()">
+                <i class="fa fa-plus"></i> Add
+              </button>
+            </div>
+          </div>                        
+        </form>        
+      </div>
+    </scrollable-content>
+
+  </hflex>
   
   <!-- tasksBinModal -->
   <div class="modal fade" id="tasksBinModal" tabindex="-1" role="dialog" aria-labelledby="tasksBinModalTitle" aria-hidden="true">
@@ -205,4 +206,4 @@
     </div><!-- /.modal-dialog -->
   </div><!-- /.modal -->
 
-</div>
+</vflex>

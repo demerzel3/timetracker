@@ -16,7 +16,7 @@
 }
 
 /* line 54, ../sass/layout/_layout.scss */
-[layout="hflex"] {
+[layout="hflex"], hflex {
   display: -webkit-flex;
   display: flex;
   -webkit-flex-wrap: nowrap;
@@ -26,7 +26,7 @@
 }
 
 /* line 58, ../sass/layout/_layout.scss */
-[layout="vflex"] {
+[layout="vflex"], vflex {
   display: -webkit-flex;
   display: flex;
   -webkit-flex-wrap: nowrap;
@@ -249,8 +249,8 @@
 [scrollable="vertical"] {
   position: relative;
 }
-/* line 106, ../sass/layout/_layout.scss */
-[scrollable="vertical"] > [scrollable-content] {
+/* line 107, ../sass/layout/_layout.scss */
+[scrollable="vertical"] > [scrollable-content], [scrollable="vertical"] > scrollable-content {
   position: absolute;
   top: 0;
   bottom: 0;
@@ -258,6 +258,12 @@
   right: 0;
   overflow-x: hidden;
   overflow-y: auto;
+}
+
+/* line 118, ../sass/layout/_layout.scss */
+body, html {
+  width: 100%;
+  height: 100%;
 }
 
 /* line 1, ../sass/theme/_face.scss */

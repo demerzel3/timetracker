@@ -8,13 +8,11 @@
 <link rel="stylesheet" href="bower_components/font-awesome/css/font-awesome.min.css">
 <link rel="stylesheet" href="css/main.css">
 </head>
-<body>
-  <div class="container">
-    <div class="row header" header-controller>
-      <div class="col-sm-6">
-        <h1>TimeTracker</h1>
-      </div>
-      <div class="col-sm-6 text-right" ng-if="ctrl.session.user != null">
+<body layout="hflex" justify="center">
+  <div style="width: 1170px" layout="vflex">
+    <div class="header" header-controller layout="hflex" align-items="center" justify="space-between">
+      <h1>TimeTracker</h1>
+      <div ng-if="ctrl.session.user != null">
         <div class="face">
           <img ng-src="{{ctrl.session.user.avatarUrl}}"/>
           <span ng-bind-template="{{ctrl.session.user.name}}"></span>
@@ -23,7 +21,7 @@
       </div>
     </div>
     <!-- maschera la sintassi di angular fino al termine del caricamento -->
-    <ng-view></ng-view>
+    <ng-view grow="1" layout="vflex" align-items="stretch"></ng-view>
   </div>
 
   <script type="application/dart" src="timetracker.dart"></script>
