@@ -50,14 +50,17 @@
 
 [layout="flex"] {
   @include flex-container;
+  position: relative;
 }
 [layout="hflex"], hflex {
   @include flex-container;
   @include flex-direction(row);  
+  position: relative;
 }
 [layout="vflex"], vflex {
   @include flex-container;
   @include flex-direction(column);  
+  position: relative;
 }
 
 [direction="row"] { @include flex-direction(row) }
@@ -100,6 +103,14 @@
 [shrink="1"]    { @include flex-shrink(1) }
 [shrink="1.5"]  { @include flex-shrink(1.5) }
 [shrink="2"]    { @include flex-shrink(2) }
+
+container {
+  position: absolute !important;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
 
 [scrollable="vertical"] {
   position: relative;

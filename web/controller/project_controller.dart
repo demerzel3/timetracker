@@ -6,7 +6,7 @@ part of timetracker;
 class ProjectController implements NgDetachAware {
 
   ProjectsClient _db;
-  LoggedUser _loggedUser;
+  Session _session;
   Modal _tasksBinModal;
   Scope _scope;
   
@@ -28,7 +28,7 @@ class ProjectController implements NgDetachAware {
   
   bool newTaskFormFocus = false;
   
-  ProjectController(this._db, this._loggedUser, this._scope, RouteProvider routeProvider) {
+  ProjectController(this._db, this._session, this._scope, RouteProvider routeProvider) {
     _projectId = routeProvider.parameters['projectId'];
     
     // whenever activeTiming get changed, we start a timer that updates its duration
@@ -75,7 +75,7 @@ class ProjectController implements NgDetachAware {
       print(project.name + " updated");
       
       // restore activeTiming for the current user and update the total immediately
-      activeTiming = project.getActiveTiming(_loggedUser.user);
+      activeTiming = project.getActiveTiming(_session.user);
       if (activeTiming != null) {
         activeTiming.updateDuration(new DateTime.now());
         // update the total duration of the project based on the new timing duration, this won't be necessary in the future
@@ -101,7 +101,7 @@ class ProjectController implements NgDetachAware {
   startTimer() {
     var autoTiming = new Timing();
     autoTiming.trackingActive = true;
-    autoTiming.user = _loggedUser.user;
+    autoTiming.user = _session.user;
     autoTiming.duration = new Duration();
     autoTiming.task = selectedTask; // set the parent task
     _db.generateUuid().then((String uuid) {

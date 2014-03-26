@@ -19,52 +19,51 @@
   </hflex>
 
   <hflex grow="1">
-    <vflex grow="1">
-      <div grow="1" ng-if="ctrl.project != null" scrollable="vertical">
-        <div class="list-group tasks-list" scrollable-content>
-          <div ng-repeat="task in ctrl.project.tasks" 
-               ng-class="{'active': ctrl.selectedTask == task}" 
-               ng-click="ctrl.selectTask(task)"
-               class="list-group-item selectable" draggable="true">
-            <strong>{{$index+1}})</strong> {{task.name}}
-            <span class="actions">
-              &emsp;
-              <!-- <a href=""><i class="fa fa-pencil"></i></a> editing is just not implemented yet -->
-              <a href="" ng-click="ctrl.deleteTask(task)"><i class="fa fa-times"></i></a>
-            </span>
-            <span class="badge">
-              <span class="fa-stack timer" ng-if="ctrl.activeTiming != null && ctrl.activeTiming.task == task">
-                <i class="fa fa-circle-o fa-stack-1x"></i>
-                <i class="fa fa-circle fa-stack-1x"></i>
-              </span>          
-              <i class="fa fa-clock-o" ng-if="ctrl.activeTiming == null || ctrl.activeTiming.task != task"></i>
-              &emsp;
-              {{task.totalDuration|duration:'h:mm|&minus;'}}
-              <span ng-if="task.estimate != null">/ {{task.estimate|floor}}:00</span>
-            </span>
-          </div>
-        </div>
-      </div>
+    <vflex grow="1">    
+      <container layout="vflex">
+        <form name="newTaskForm" class="form-horizontal" role="form" ng-submit="ctrl.createNewTask()">
+          <vflex>
+            <hflex>
+              <label class="sr-only" for="newTaskNameBox">Task name</label>
+              <div grow="1" zzzng-class="{'col-sm-12': ctrl.newTask.name.length == 0, 'col-sm-7': ctrl.newTask.name.length > 0}">
+                <input id="newTaskNameBox" class="form-control" type="text" ng-model="ctrl.newTask.name" placeholder="New Task" />
+              </div>
+              <hflex ng-if="ctrl.newTask.name.length > 0">
+                <label class="control-label" for="newTaskEstimateBox" shrink="0">Est. Duration</label>
+                <input type="number" class="form-control" id="newTaskEstimateBox" 
+                       ng-model="ctrl.newTask.estimate" placeholder="h"/>
+              </hflex>
+            </hflex>
+            <button ng-if="ctrl.newTask.name.length > 0" type="submit" class="btn btn-primary" align="end"> <i class="fa fa-plus"></i> Add</button>
+          </vflex>
+        </form>      
       
-      <form name="newTaskForm" class="form-horizontal" role="form" ng-submit="ctrl.createNewTask()">
-        <div class="form-group">
-          <label class="sr-only" for="newTaskNameBox">Task name</label>
-          <div ng-class="{'col-sm-12': ctrl.newTask.name.length == 0, 'col-sm-7': ctrl.newTask.name.length > 0}">
-            <input id="newTaskNameBox" class="form-control" type="text" ng-model="ctrl.newTask.name" placeholder="New Task" />
-          </div>
-          <div ng-if="ctrl.newTask.name.length > 0">
-            <label class="col-sm-3 control-label" for="newTaskEstimateBox">Est. Duration</label>
-            <div class="col-sm-2">
-              <input type="number" class="form-control" id="newTaskEstimateBox" ng-model="ctrl.newTask.estimate" placeholder="h"/>
+        <div grow="1" ng-if="ctrl.project != null" scrollable="vertical">
+          <div class="list-group tasks-list" scrollable-content>
+            <div ng-repeat="task in ctrl.project.tasks" 
+                 ng-class="{'active': ctrl.selectedTask == task}" 
+                 ng-click="ctrl.selectTask(task)"
+                 class="list-group-item selectable" draggable="true">
+              <strong>{{$index+1}})</strong> {{task.name}}
+              <span class="actions">
+                &emsp;
+                <!-- <a href=""><i class="fa fa-pencil"></i></a> editing is just not implemented yet -->
+                <a href="" ng-click="ctrl.deleteTask(task)"><i class="fa fa-times"></i></a>
+              </span>
+              <span class="badge">
+                <span class="fa-stack timer" ng-if="ctrl.activeTiming != null && ctrl.activeTiming.task == task">
+                  <i class="fa fa-circle-o fa-stack-1x"></i>
+                  <i class="fa fa-circle fa-stack-1x"></i>
+                </span>          
+                <i class="fa fa-clock-o" ng-if="ctrl.activeTiming == null || ctrl.activeTiming.task != task"></i>
+                &emsp;
+                {{task.totalDuration|duration:'h:mm|&minus;'}}
+                <span ng-if="task.estimate != null">/ {{task.estimate|floor}}:00</span>
+              </span>
             </div>
           </div>
-        </div>
-        <div class="form-group" ng-if="ctrl.newTask.name.length > 0">
-          <div class="col-sm-12 text-right">
-            <button type="submit" class="btn btn-primary"> <i class="fa fa-plus"></i> Add</button>
-          </div>
-        </div>                        
-      </form>
+        </div>        
+      </container>
     </vflex>
 
     <div grow="1" ng-if="ctrl.selectedTask == null"></div>
