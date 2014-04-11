@@ -561,3 +561,21 @@ a.link-sm {
   border-radius: 0;
   border-bottom: none;
 }
+
+/* line 1, ../sass/theme/_timingsTable.scss */
+.timings-table {
+  width: 80%;
+  margin-left: auto;
+  margin-right: auto;
+}
+/* line 6, ../sass/theme/_timingsTable.scss */
+.timings-table .face img {
+  width: 64px;
+  height: 64px;
+}
+/* line 12, ../sass/theme/_timingsTable.scss */
+.timings-table th:first-child,
+.timings-table td:first-child {
+  width: 25%;
+  text-align: right;
+}

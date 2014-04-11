@@ -68,11 +68,27 @@
       </container>
     </vflex>
 
-    <div grow="1" ng-if="ctrl.selectedTask == null"></div>
-    <div grow="1" ng-if="ctrl.selectedTask != null" scrollable="vertical">
+    <div grow="1.5" ng-if="ctrl.selectedTask == null"></div>
+    <div grow="1.5" ng-if="ctrl.selectedTask != null" scrollable="vertical">
     
       <scrollable-content>
-        <table class="table">
+        <div class="jumbotron jumbotron-timer" ng-if="ctrl.activeTiming == null">
+          <a class="pull-right btn btn-success btn-lg" style="margin-top: 9px" role="button" 
+             ng-click="ctrl.startTimer()">
+            <i class="fa fa-play"></i>&emsp;Start
+          </a>
+          <h1>00:00:00</h1>        
+        </div>      
+      
+        <div class="jumbotron jumbotron-timer" ng-if="ctrl.activeTiming != null && ctrl.activeTiming.task == ctrl.selectedTask">
+          <a class="pull-right btn btn-danger btn-lg" style="margin-top: 9px" role="button"
+             ng-click="ctrl.stopTimer()">
+            <i class="fa fa-stop"></i>&emsp;Stop
+          </a>
+          <h1>{{ctrl.activeTiming.duration|duration:'hh:mm:ss'}}</h1>
+        </div>      
+      
+        <table class="table timings-table">
           <thead>
             <tr>
               <th></th>
@@ -93,23 +109,8 @@
             </tr>
           </tbody>
         </table>
-          
-        <div class="jumbotron jumbotron-timer" ng-if="ctrl.activeTiming == null">
-          <a class="pull-right btn btn-success btn-lg" style="margin-top: 9px" role="button" 
-             ng-click="ctrl.startTimer()">
-            <i class="fa fa-play"></i>&emsp;Start
-          </a>
-          <h1>00:00:00</h1>        
-        </div>
-  
-        <div class="jumbotron jumbotron-timer" ng-if="ctrl.activeTiming != null && ctrl.activeTiming.task == ctrl.selectedTask">
-          <a class="pull-right btn btn-danger btn-lg" style="margin-top: 9px" role="button"
-             ng-click="ctrl.stopTimer()">
-            <i class="fa fa-stop"></i>&emsp;Stop
-          </a>
-          <h1>{{ctrl.activeTiming.duration|duration:'hh:mm:ss'}}</h1>
-        </div>
-      
+        
+        <!--
         <table class="table table-striped" ng-if="ctrl.selectedTask.timings.length > 0">
           <thead>
             <tr>
@@ -139,6 +140,7 @@
             </tr>          
           </tbody>
         </table>
+        -->
         
         <form role="form" class="form-horizontal" ng-submit="ctrl.createNewTiming()">
           <div class="form-group">

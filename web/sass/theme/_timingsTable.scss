@@ -1,0 +1,16 @@
+.timings-table {
+  width: 80%;
+  margin-left: auto;
+  margin-right: auto;
+  
+  .face img {
+    width: 64px;
+    height: 64px;
+  }
+  
+  th:first-child,
+  td:first-child {
+    width: 25%;
+    text-align: right;
+  }
+}
