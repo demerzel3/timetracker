@@ -1,0 +1,57 @@
+.tasks-list {
+  
+  border-right: solid 1px #ccc;
+  
+  form {
+    border: solid 1px $separator-color;
+    border-bottom-width: 2px;
+    border-right: none;
+    background-color: #f6f6f6;
+  }
+  .form-row {
+    padding: 0 10px 10px 10px;
+    
+    &:first-child {
+      padding-top: 10px;
+    }
+  }
+  label.control-label {
+    padding-top: 9px;
+    padding-right: 10px;
+    font-weight: normal;
+    font-size: 0.8em;
+    text-transform: uppercase;
+    width: 100px;
+  }
+  .form-control {
+    width: auto;
+    background-color: #fcfcfc;
+    border-radius: 0;
+    border-color: $separator-color;
+    box-shadow: none;
+  }
+  textarea {
+    resize: none;
+  }
+  input.form-control {
+    width: 100px;
+  }
+  
+  .list-group {
+    margin-bottom: 0;
+  
+    .list-group-item {
+      border-color: $separator-color;
+      border-right: none;
+    }
+    .list-group-item:first-child {
+      border-radius: 0;
+      border-top: none;
+    }
+    .list-group-item:last-child {
+      border-radius: 0;
+      border-bottom: none;
+    }
+  }
+  
+}

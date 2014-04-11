@@ -497,3 +497,67 @@ a.link-sm {
 .jumbotron-timer h1 {
   margin: 0;
 }
+
+/* line 1, ../sass/theme/_tasksList.scss */
+.tasks-list {
+  border-right: solid 1px #ccc;
+}
+/* line 5, ../sass/theme/_tasksList.scss */
+.tasks-list form {
+  border: solid 1px #dddddd;
+  border-bottom-width: 2px;
+  border-right: none;
+  background-color: #f6f6f6;
+}
+/* line 11, ../sass/theme/_tasksList.scss */
+.tasks-list .form-row {
+  padding: 0 10px 10px 10px;
+}
+/* line 14, ../sass/theme/_tasksList.scss */
+.tasks-list .form-row:first-child {
+  padding-top: 10px;
+}
+/* line 18, ../sass/theme/_tasksList.scss */
+.tasks-list label.control-label {
+  padding-top: 9px;
+  padding-right: 10px;
+  font-weight: normal;
+  font-size: 0.8em;
+  text-transform: uppercase;
+  width: 100px;
+}
+/* line 26, ../sass/theme/_tasksList.scss */
+.tasks-list .form-control {
+  width: auto;
+  background-color: #fcfcfc;
+  border-radius: 0;
+  border-color: #dddddd;
+  box-shadow: none;
+}
+/* line 33, ../sass/theme/_tasksList.scss */
+.tasks-list textarea {
+  resize: none;
+}
+/* line 36, ../sass/theme/_tasksList.scss */
+.tasks-list input.form-control {
+  width: 100px;
+}
+/* line 40, ../sass/theme/_tasksList.scss */
+.tasks-list .list-group {
+  margin-bottom: 0;
+}
+/* line 43, ../sass/theme/_tasksList.scss */
+.tasks-list .list-group .list-group-item {
+  border-color: #dddddd;
+  border-right: none;
+}
+/* line 47, ../sass/theme/_tasksList.scss */
+.tasks-list .list-group .list-group-item:first-child {
+  border-radius: 0;
+  border-top: none;
+}
+/* line 51, ../sass/theme/_tasksList.scss */
+.tasks-list .list-group .list-group-item:last-child {
+  border-radius: 0;
+  border-bottom: none;
+}

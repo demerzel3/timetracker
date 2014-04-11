@@ -20,26 +20,28 @@
 
   <hflex grow="1">
     <vflex grow="1">    
-      <container layout="vflex">
+      <container layout="vflex" class="tasks-list">
         <form name="newTaskForm" class="form-horizontal" role="form" ng-submit="ctrl.createNewTask()">
           <vflex>
-            <hflex>
-              <label class="sr-only" for="newTaskNameBox">Task name</label>
-              <div grow="1" zzzng-class="{'col-sm-12': ctrl.newTask.name.length == 0, 'col-sm-7': ctrl.newTask.name.length > 0}">
-                <input id="newTaskNameBox" class="form-control" type="text" ng-model="ctrl.newTask.name" placeholder="New Task" />
-              </div>
-              <hflex ng-if="ctrl.newTask.name.length > 0">
-                <label class="control-label" for="newTaskEstimateBox" shrink="0">Est. Duration</label>
-                <input type="number" class="form-control" id="newTaskEstimateBox" 
-                       ng-model="ctrl.newTask.estimate" placeholder="h"/>
-              </hflex>
+            <hflex class="form-row">
+              <label class="control-label" for="newTaskNameBox" ng-if="ctrl.newTask.name.length > 0">New task</label>
+              <textarea id="newTaskNameBox" class="form-control" type="text" ng-model="ctrl.newTask.name" placeholder="New task" 
+                rows="{{ctrl.newTask.name.length > 0 ? 4:1}}" grow="1"></textarea>              
             </hflex>
-            <button ng-if="ctrl.newTask.name.length > 0" type="submit" class="btn btn-primary" align="end"> <i class="fa fa-plus"></i> Add</button>
+            <hflex ng-if="ctrl.newTask.name.length > 0" class="form-row">
+              <label class="control-label" for="newTaskEstimateBox" shrink="0">Est. Duration</label>
+              <input type="number" class="form-control" id="newTaskEstimateBox" 
+                     ng-model="ctrl.newTask.estimate" placeholder="h"/>
+              <div grow="1"></div>
+              <button shrink="0" ng-if="ctrl.newTask.name.length > 0" type="submit" class="btn btn-primary"> 
+                <i class="fa fa-plus"></i> Add
+              </button>                     
+            </hflex>
           </vflex>
         </form>      
       
         <div grow="1" ng-if="ctrl.project != null" scrollable="vertical">
-          <div class="list-group tasks-list" scrollable-content>
+          <div class="list-group" scrollable-content>
             <div ng-repeat="task in ctrl.project.tasks" 
                  ng-class="{'active': ctrl.selectedTask == task}" 
                  ng-click="ctrl.selectTask(task)"
