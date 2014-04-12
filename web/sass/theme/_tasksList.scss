@@ -1,11 +1,13 @@
 .tasks-list {
   
   border-right: solid 1px #ccc;
+  border-left: solid 1px #ccc;
   
   form {
     border: solid 1px $separator-color;
     border-bottom-width: 2px;
     border-right: none;
+    border-left: none;
     background-color: #f6f6f6;
   }
   .form-row {
@@ -27,11 +29,13 @@
     width: auto;
     background-color: #fcfcfc;
     border-radius: 0;
-    border-color: $separator-color;
-    box-shadow: none;
   }
   textarea {
     resize: none;
+    border-color: $separator-color;
+  }
+  input {
+    border-color: $separator-color;
   }
   input.form-control {
     width: 100px;
@@ -43,6 +47,7 @@
     .list-group-item {
       border-color: $separator-color;
       border-right: none;
+      border-left: none;
     }
     .list-group-item:first-child {
       border-radius: 0;
@@ -50,7 +55,6 @@
     }
     .list-group-item:last-child {
       border-radius: 0;
-      border-bottom: none;
     }
   }
   

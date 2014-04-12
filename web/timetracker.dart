@@ -46,7 +46,7 @@ class TTRouter {
   
   TTRouter(this._session);
   
-  void call(Router router, ViewFactory views) {
+  void call(Router router, RouteViewFactory views) {
     views.configure({
       'signin': ngRoute(
           path: '/signin',
@@ -65,7 +65,7 @@ class TTRouter {
    * Returns a RoutePreEnterEventHandler that allows entry for authenticated users only,
    * redirecting anonymous users to "/projects"
    */  
-  _authenticatedFirewall(Router router, ViewFactory views, String viewName) {
+  _authenticatedFirewall(Router router, RouteViewFactory views, String viewName) {
     return (RouteEnterEvent e) {
       if (!_session.isAuthenticated) {
         router.go('signin', {});
@@ -79,7 +79,7 @@ class TTRouter {
    * Returns a RoutePreEnterEventHandler that allows entry for anonymous users only,
    * redirecting authenticated users to "/projects"
    */
-  _anonymousFirewall(Router router, ViewFactory views, String viewName) {
+  _anonymousFirewall(Router router, RouteViewFactory views, String viewName) {
     return (RouteEnterEvent e) {
       if (_session.isAuthenticated) {
         return router.go('projects', {});
@@ -131,7 +131,7 @@ void main() {
   var session = new Session(new Store('timetracker', 'session'));
   session.isLoading().then((_) {
     // bootstrap angular
-    ngBootstrap(module: new TimeTrackerModule(session));    
+    ngBootstrap(module: new TimeTrackerModule(session));
   });
 }
 
