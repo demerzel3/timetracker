@@ -5,6 +5,8 @@ class Task {
   String name = '';
   // estimate is always in hours
   num estimate;
+  bool completed = false;
+  DateTime completedAt;
   List<Timing> timings = new List<Timing>();
   
   /**
@@ -27,6 +29,12 @@ class Task {
     id = raw['id'];
     name = raw['name'];
     estimate = raw['estimate'];
+    if (raw['completed'] != null) {
+      this.completed = raw['completed'];
+      if (raw['completedAt'] != null) {
+        this.completedAt = DateTime.parse(raw['completedAt']); 
+      }
+    }
     if (raw['timings'] != null) {
       timings = new List<Timing>.from(raw['timings'].map((rawTiming) => new Timing.fromJson(rawTiming)..task = this));
     }
@@ -90,12 +98,17 @@ class Task {
   }  
   
   Map toJson() {
-    return {
+    var serialized = {
       'id': id,
       'name': name,
       'estimate': estimate,
+      'completed': completed,
       'timings': timings
     };
+    if (completed && completedAt != null) {
+      serialized['completedAt'] = completedAt.toString();
+    }
+    return serialized;
   }
   
   String toString() {

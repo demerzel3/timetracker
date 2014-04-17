@@ -1,0 +1,28 @@
+.task-details {
+  h3 {
+    margin: 0;
+    font-size: 1.3em;
+    padding: 10px;
+    font-weight: normal;
+    padding-left: 45px;
+    position: relative;
+    background-color: $toolbar-background-color;
+    border-top: solid 1px $separator-color;
+    line-height: 1.4em;
+    
+    a {
+      color: black;
+      &:hover {
+        opacity: 0.6;
+      }
+      &:active {
+        opacity: 0.3;
+      }
+    }
+    i {
+      position: absolute;
+      left: 15px;
+      top: 15px;
+    }
+  }
+}

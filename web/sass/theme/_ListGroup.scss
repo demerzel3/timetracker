@@ -3,9 +3,9 @@
     cursor: pointer;
   }
   .list-group-item.active {
+    color: white;
     background-color: $selection-color;
     border-color: $selection-color;
-    color: white;
   }
   .list-group-item.active + .list-group-item {
     border-top: none;

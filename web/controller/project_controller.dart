@@ -13,9 +13,13 @@ class ProjectController implements NgDetachAware {
   List<User> users = User.defaultUsers();
   
   Project project;
+  List<Task> activeTasks;
+  List<Task> completedTasks;
   
   Task selectedTask;
   TaskTimeline selectedTaskTimeline;
+  
+  bool completedTasksVisible = false;
   
   // TODO: make this "timings" to account for multiple active timings at once, from different users
   Timing activeTiming;
@@ -92,6 +96,27 @@ class ProjectController implements NgDetachAware {
           }
         }
       }
+      
+      // build activeTasks and completedTasks
+      activeTasks = new List<Task>();
+      completedTasks = new List<Task>();
+      for (Task task in project.tasks) {
+        if (task.completed) {
+          completedTasks.add(task);
+        } else {
+          activeTasks.add(task);
+        }
+      }
+      // completed tasks are sorted by completion date desc
+      completedTasks.sort((Task t1, Task t2) {
+        if (t1.completedAt != null) {
+          return -t1.completedAt.compareTo(t2.completedAt);
+        } else if (t2.completedAt != null) {
+          return 1;
+        } else {
+          return 0;
+        }
+      });
       
       // resume polling
       async.scheduleMicrotask(_pollForChanges);
@@ -236,6 +261,10 @@ class ProjectController implements NgDetachAware {
   }
   
   selectTask(Task task) {
+    if (selectedTask == task) {
+      return;
+    }
+    
     selectedTask = task;
     if (selectedTaskTimeline != null) {
       selectedTaskTimeline.detach();
@@ -248,18 +277,51 @@ class ProjectController implements NgDetachAware {
   
   tasksListKeyDown(dom.KeyboardEvent event) {
     if (event.keyCode == dom.KeyCode.DOWN || event.keyCode == dom.KeyCode.UP) {
-      int selectedTaskIndex = project.tasks.indexOf(selectedTask);
+      var tasksList = selectedTask.completed ? completedTasks : activeTasks;
+      
+      int selectedTaskIndex = tasksList.indexOf(selectedTask);
       if (event.keyCode == dom.KeyCode.DOWN) {
         selectedTaskIndex++;
       } else if (event.keyCode == dom.KeyCode.UP) {
         selectedTaskIndex--;
       }
-      selectedTaskIndex = Math.max(0, Math.min(selectedTaskIndex, project.tasks.length-1));
-      selectTask(project.tasks[selectedTaskIndex]);
+      selectedTaskIndex = Math.max(0, Math.min(selectedTaskIndex, tasksList.length-1));
+      selectTask(tasksList[selectedTaskIndex]);
       
       event.preventDefault();
       event.stopImmediatePropagation();
     }
+  }
+  
+  toggleCompleted(Task task) {
+    if (task.completed) {
+      task.completed = false;
+      task.completedAt = null;
+      
+      // move the task from completed to active
+      // insertion point must be calculated based on the original list of tasks
+      int insertionPoint = 0;
+      for (Task t in project.tasks) {
+        if (t == task) {
+          break;
+        } else if (!t.completed) {
+          insertionPoint++;
+        }
+      }
+      completedTasks.remove(task);
+      activeTasks.insert(insertionPoint, task);
+      
+    } else {
+      task.completed = true;
+      task.completedAt = new DateTime.now();
+      
+      // move the task from active to completed, posing it at the top of the list
+      activeTasks.remove(task);
+      completedTasks.insert(0, task);
+      
+      completedTasksVisible = true;
+    }
+    _saveProject();
   }
     
   debug() {

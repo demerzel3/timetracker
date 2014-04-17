@@ -21,7 +21,7 @@
   <hflex grow="1">
     <vflex grow="1">    
       <container layout="vflex" class="tasks-list">
-        <form name="newTaskForm" class="form-horizontal" role="form" ng-submit="ctrl.createNewTask()" tabindex="0">
+        <form name="newTaskForm" class="form-horizontal" role="form" ng-submit="ctrl.createNewTask()">
           <vflex>
             <hflex class="form-row">
               <label class="control-label" for="newTaskNameBox" ng-if="ctrl.newTask.name.length > 0">New task</label>
@@ -42,7 +42,7 @@
       
         <div grow="1" ng-if="ctrl.project != null" scrollable="vertical">
           <scrollable-content class="list-group" tabindex="1" ng-keydown="ctrl.tasksListKeyDown($event)">
-            <div ng-repeat="task in ctrl.project.tasks" 
+            <div ng-repeat="task in ctrl.activeTasks" 
                  ng-class="{'active': ctrl.selectedTask == task}" 
                  ng-click="ctrl.selectTask(task)"
                  class="list-group-item selectable" draggable="true" layout="hflex">
@@ -67,6 +67,29 @@
               </span>
               -->
             </div>
+            
+            <div class="text-center" ng-if="ctrl.completedTasks.length > 0" style="margin: 10px 0">
+              <a class="btn btn-sm btn-link" ng-click="ctrl.completedTasksVisible = true" 
+                 ng-if="!ctrl.completedTasksVisible">
+                Show {{ ctrl.completedTasks.length }} completed task<span ng-if="ctrl.completedTasks.length > 1">s</span>
+              </a>
+              <a class="btn btn-sm btn-link" ng-click="ctrl.completedTasksVisible = false" 
+                 ng-if="ctrl.completedTasksVisible">
+                Hide completed tasks
+              </a>
+            </div>
+
+            <div ng-if="ctrl.completedTasksVisible">
+              <div></div> <!-- mock element for styling purposes -->
+              <div ng-repeat="task in ctrl.completedTasks" 
+                   ng-class="{'active': ctrl.selectedTask == task}" 
+                   ng-click="ctrl.selectTask(task)"
+                   class="list-group-item selectable completed" draggable="true" layout="hflex">
+                <strong class="index"><i class="fa fa-check"></i></strong>
+                <span class="task-name" grow="1">{{task.name}}</span>
+              </div>
+            </div>
+            
           </scrollable-content>
         </div>        
       </container>
@@ -75,8 +98,14 @@
     <div grow="1.5" ng-if="ctrl.selectedTask == null"></div>
     <div grow="1.5" ng-if="ctrl.selectedTask != null" scrollable="vertical">
     
-      <scrollable-content>
-        <h3>{{ctrl.selectedTask.name}}</h3>
+      <scrollable-content class="task-details">
+        <h3>
+          <a ng-click="ctrl.toggleCompleted(ctrl.selectedTask)">
+            <i class="fa fa-lg fa-square-o" ng-if="!ctrl.selectedTask.completed"></i>
+            <i class="fa fa-lg fa-check-square-o" ng-if="ctrl.selectedTask.completed"></i>
+          </a>
+          {{ctrl.selectedTask.name}}
+        </h3>
       
         <div class="jumbotron jumbotron-timer text-center">
           <!--

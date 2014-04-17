@@ -49,10 +49,11 @@
     margin-bottom: 0;
   
     .list-group-item {
-      border-color: $separator-color;
+      //border-color: $separator-color;
       border-right: none;
       border-left: none;
       position: relative;
+      overflow: hidden;
     }
     .list-group-item:first-child {
       border-radius: 0;
@@ -85,9 +86,9 @@
     }
     .task-weight, .task-progress {
       position: absolute;
-      top: 0;
+      top: -1px;
       left: 0;
-      bottom: 0;
+      bottom: -1px;
     }
     .task-weight {
       background-color: darken(#ffffff, 10%);
