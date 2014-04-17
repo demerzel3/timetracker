@@ -1,0 +1,43 @@
+.list-group {
+  .list-group-item.selectable {
+    cursor: pointer;
+  }
+  .list-group-item.active {
+    background-color: $selection-color;
+    border-color: $selection-color;
+    color: white;
+  }
+  .list-group-item.active + .list-group-item {
+    border-top: none;
+    padding-top: 11px;
+  }
+  
+  .list-group-item.active > .badge {
+    color: $selection-color;
+    background-color: #fff;
+  }
+  
+  .list-group-item > .actions {
+    visibility: hidden;
+    float: right;
+  }
+  .list-group-item.active > .actions,
+  .list-group-item:hover > .actions {
+    visibility: visible;
+  }
+  .list-group-item.active > .actions > a {
+    color: white;
+  }
+  
+  &:focus {
+    outline: none;
+  
+    .list-group-item.active {
+      background-color: $active-selection-color;
+      border-color: $active-selection-color;
+    }
+    .list-group-item.active > .badge {
+      color: $active-selection-color;
+    }
+  }
+}

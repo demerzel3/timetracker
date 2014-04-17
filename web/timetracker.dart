@@ -2,6 +2,7 @@ library timetracker;
 
 import 'dart:html' as dom;
 import 'dart:async' as async;
+import 'dart:math' as Math;
 import 'dart:convert';
 import 'dart:collection';
 import 'package:intl/intl.dart';

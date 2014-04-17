@@ -118,35 +118,6 @@ a.link-sm {
   line-height: 30px;
 }
 
-.list-group-item.selectable {
-  cursor: pointer;
-}
-.list-group-item.active {
-  background-color: #428bca;
-  border-color: #428bca;
-  color: white;
-}
-.list-group-item.active + .list-group-item {
-  border-top: none;
-  padding-top: 11px;
-}
-
-.list-group-item.active > .badge {
-  color: #428bca;
-  background-color: #fff;
-}
-.list-group-item > .actions {
-  visibility: hidden;
-  float: right;
-}
-.list-group-item.active > .actions,
-.list-group-item:hover > .actions {
-  visibility: visible;
-}
-.list-group-item.active > .actions > a {
-  color: white;
-}
-
 .fa-stack.timer {
   width: 1em;
   height: 1em;

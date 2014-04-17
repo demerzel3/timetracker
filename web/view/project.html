@@ -4,7 +4,7 @@
        justify="space-between" align-items="center">
     <a href="#/"><i class="fa fa-angle-left"></i> Projects</a>
     <div>
-      {{ctrl.project.name}}
+      <h2>{{ctrl.project.name}}</h2>
       &emsp;
       <span class="badge">
         <i class="fa fa-clock-o"></i>&emsp;{{ctrl.project.totalDuration|duration:'h:mm|&minus;'}} 
@@ -21,7 +21,7 @@
   <hflex grow="1">
     <vflex grow="1">    
       <container layout="vflex" class="tasks-list">
-        <form name="newTaskForm" class="form-horizontal" role="form" ng-submit="ctrl.createNewTask()">
+        <form name="newTaskForm" class="form-horizontal" role="form" ng-submit="ctrl.createNewTask()" tabindex="0">
           <vflex>
             <hflex class="form-row">
               <label class="control-label" for="newTaskNameBox" ng-if="ctrl.newTask.name.length > 0">New task</label>
@@ -41,15 +41,18 @@
         </form>      
       
         <div grow="1" ng-if="ctrl.project != null" scrollable="vertical">
-          <div class="list-group" scrollable-content>
+          <scrollable-content class="list-group" tabindex="1" ng-keydown="ctrl.tasksListKeyDown($event)">
             <div ng-repeat="task in ctrl.project.tasks" 
                  ng-class="{'active': ctrl.selectedTask == task}" 
                  ng-click="ctrl.selectTask(task)"
-                 class="list-group-item selectable" draggable="true">
-              <strong>{{$index+1}})</strong> {{task.name}}
+                 class="list-group-item selectable" draggable="true" layout="hflex">
+              <strong class="index">{{$index+1}})</strong>
+              <span class="task-name" grow="1">{{task.name}}</span>
+              <div class="task-weight" ng-style="{width: (task.weight*100)+'%'}"></div>
+              <div class="task-progress" ng-style="{width: (task.progress*task.weight*100)+'%'}"></div>
+              <!--
               <span class="actions">
                 &emsp;
-                <!-- <a href=""><i class="fa fa-pencil"></i></a> editing is just not implemented yet -->
                 <a href="" ng-click="ctrl.deleteTask(task)"><i class="fa fa-times"></i></a>
               </span>
               <span class="badge">
@@ -62,8 +65,9 @@
                 {{task.totalDuration|duration:'h:mm|&minus;'}}
                 <span ng-if="task.estimate != null">/ {{task.estimate|floor}}:00</span>
               </span>
+              -->
             </div>
-          </div>
+          </scrollable-content>
         </div>        
       </container>
     </vflex>
@@ -72,13 +76,31 @@
     <div grow="1.5" ng-if="ctrl.selectedTask != null" scrollable="vertical">
     
       <scrollable-content>
+        <h3>{{ctrl.selectedTask.name}}</h3>
+      
+        <div class="jumbotron jumbotron-timer text-center">
+          <!--
+          <a class="pull-right btn btn-success btn-lg" style="margin-top: 9px" role="button" 
+             ng-click="ctrl.startTimer()">
+            <i class="fa fa-play"></i>&emsp;Start
+          </a>
+          -->
+          <h2>
+            <i class="fa fa-clock-o"></i>
+            {{ctrl.selectedTask.totalDuration|duration:'h:mm|&minus;'}}
+            <span class="estimate" ng-if="ctrl.selectedTask.estimate != null">/ {{ctrl.selectedTask.estimate|floor}}:00</span>
+          </h2>        
+        </div>
+      
+        <!--
         <div class="jumbotron jumbotron-timer" ng-if="ctrl.activeTiming == null">
           <a class="pull-right btn btn-success btn-lg" style="margin-top: 9px" role="button" 
              ng-click="ctrl.startTimer()">
             <i class="fa fa-play"></i>&emsp;Start
           </a>
           <h1>00:00:00</h1>        
-        </div>      
+        </div>
+        -->      
       
         <div class="jumbotron jumbotron-timer" ng-if="ctrl.activeTiming != null && ctrl.activeTiming.task == ctrl.selectedTask">
           <a class="pull-right btn btn-danger btn-lg" style="margin-top: 9px" role="button"

@@ -9,6 +9,10 @@
     border-right: none;
     border-left: none;
     background-color: #f6f6f6;
+    
+    &:focus {
+      background-color: white;
+    }
   }
   .form-row {
     padding: 0 10px 10px 10px;
@@ -48,6 +52,7 @@
       border-color: $separator-color;
       border-right: none;
       border-left: none;
+      position: relative;
     }
     .list-group-item:first-child {
       border-radius: 0;
@@ -56,6 +61,51 @@
     .list-group-item:last-child {
       border-radius: 0;
     }
+    
+    .list-group-item.active .badge {
+      visibility: hidden;
+    }
+    
+    .index {
+      padding-right: 5px;
+      width: 30px;
+      text-align: right;
+      
+      position: relative;
+      z-index: 2;
+    }
+    .task-name {
+      width: 0;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      
+      position: relative;
+      z-index: 2;
+    }
+    .task-weight, .task-progress {
+      position: absolute;
+      top: 0;
+      left: 0;
+      bottom: 0;
+    }
+    .task-weight {
+      background-color: darken(#ffffff, 10%);
+      width: 89%;
+      z-index: 0;
+    }
+    .task-progress {
+      background-color: darken(#ffffff, 4%);
+      width: (0.89*0.10)*100%;
+      z-index: 1;
+    }
+    
+    .list-group-item.active .task-weight { background-color: darken($selection-color, 10%); }
+    .list-group-item.active .task-progress { background-color: darken($selection-color, 6%); }
+    
+    &:focus .list-group-item.active .task-weight { background-color: darken($active-selection-color, 12%); }
+    &:focus .list-group-item.active .task-progress { background-color: darken($active-selection-color, 8%); }
   }
+  
   
 }

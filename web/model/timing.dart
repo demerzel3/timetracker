@@ -24,7 +24,11 @@ class Timing {
     user = User.defaultUsers().firstWhere((User u) => u.id == raw['user']['id']);
     //user = new User(raw['user']['id'], raw['user']['name']);
     date = DateTime.parse(raw['date']);
-    duration = new Duration(hours: raw['duration']['hours'], minutes: raw['duration']['minutes']);
+    duration = new Duration(
+        hours: raw['duration']['hours'], 
+        minutes: raw['duration']['minutes'],
+        seconds: raw['duration']['seconds'] != null ? raw['duration']['seconds'] : 0
+    );
     if (raw.containsKey('trackingActive')) {
       trackingActive = raw['trackingActive'];
     }
@@ -60,7 +64,8 @@ class Timing {
       'date': date.toString(),
       'duration': {
         'hours': duration.inHours,
-        'minutes': duration.inMinutes-duration.inHours*Duration.MINUTES_PER_HOUR
+        'minutes': duration.inMinutes-duration.inHours*Duration.MINUTES_PER_HOUR,
+        'seconds': duration.inSeconds-duration.inMinutes*Duration.SECONDS_PER_MINUTE
       },
       'trackingActive': trackingActive
     };

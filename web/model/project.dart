@@ -38,6 +38,12 @@ class Project {
       total += task.totalDuration;
     });
     _totalDuration = total;
+    
+    // updates the progress of every task
+    // TODO: make the update more context-aware using events to update only relevant tasks
+    tasks.forEach((Task task) {
+      task.updateProgress(this);
+    });          
   }
   
   Duration get totalDuration => _totalDuration;
@@ -56,10 +62,32 @@ class Project {
         }
       }
     });
+    var changed = (_totalEstimate != total);
     _totalEstimate = total;
+    
+    if (changed) {
+      _updateTasksWeight();
+    }
   }
   
   num get totalEstimate => _totalEstimate;
+  
+  _updateTasksWeight() {
+    // updates the weight of every task in relation to the project
+    var maxWeight = 0;
+    tasks.forEach((Task task) {
+      task.updateWeight(this);
+      maxWeight = Math.max(maxWeight, task.weight);
+    });
+    
+    // scale every weight in relation of the heaviest, so that every task is relatively weighted to others
+    if (maxWeight > 0) {    
+      var scale = 0.9/maxWeight;
+      tasks.forEach((Task task) {
+        task.weight *= scale;
+      });    
+    }
+  }
   
   /**
    * Finds in its inner structure the only one possible active timing, or returns null.

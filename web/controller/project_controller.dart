@@ -245,6 +245,22 @@ class ProjectController implements NgDetachAware {
       selectedTaskTimeline = new TaskTimeline(task);
     }
   }
+  
+  tasksListKeyDown(dom.KeyboardEvent event) {
+    if (event.keyCode == dom.KeyCode.DOWN || event.keyCode == dom.KeyCode.UP) {
+      int selectedTaskIndex = project.tasks.indexOf(selectedTask);
+      if (event.keyCode == dom.KeyCode.DOWN) {
+        selectedTaskIndex++;
+      } else if (event.keyCode == dom.KeyCode.UP) {
+        selectedTaskIndex--;
+      }
+      selectedTaskIndex = Math.max(0, Math.min(selectedTaskIndex, project.tasks.length-1));
+      selectTask(project.tasks[selectedTaskIndex]);
+      
+      event.preventDefault();
+      event.stopImmediatePropagation();
+    }
+  }
     
   debug() {
     print("sticazzi");
