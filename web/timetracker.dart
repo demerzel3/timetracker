@@ -3,11 +3,13 @@ library timetracker;
 import 'dart:html' as dom;
 import 'dart:async' as async;
 import 'dart:math' as Math;
+import 'dart:svg' as svg;
 import 'dart:convert';
 import 'dart:collection';
 import 'package:intl/intl.dart';
 
 import 'package:angular/angular.dart';
+import 'package:angular/application_factory.dart';
 import 'package:angular/utils.dart';
 import 'package:bootjack/bootjack.dart';
 import 'package:event_stream/event_stream.dart';
@@ -18,6 +20,7 @@ part 'auth/logged_user.dart';
 
 part 'component/input_date_directive.dart';
 part 'component/input_time_directive.dart';
+part 'component/circular_progress_bar_component.dart';
 
 part 'controller/header_controller.dart';
 part 'controller/projects_controller.dart';
@@ -30,8 +33,8 @@ part 'data/projects_client.dart';
 
 part 'event/change_event.dart';
 
-part 'filter/duration_filter.dart';
-part 'filter/floor_filter.dart';
+part 'formatter/duration_formatter.dart';
+part 'formatter/floor_formatter.dart';
 
 part 'model/project.dart';
 part 'model/task.dart';
@@ -103,9 +106,10 @@ class TimeTrackerModule extends Module {
     
     type(DateInputDirective);
     type(TimeInputDirective);
+    type(CircularProgressBarComponent);
     
-    type(DurationFilter);
-    type(FloorFilter);
+    type(DurationFormatter);
+    type(FloorFormatter);
     
     value(Session, session);
         
@@ -132,7 +136,7 @@ void main() {
   var session = new Session(new Store('timetracker', 'session'));
   session.isLoading().then((_) {
     // bootstrap angular
-    ngBootstrap(module: new TimeTrackerModule(session));
+    applicationFactory().addModule(new TimeTrackerModule(session)).run();
   });
 }
 

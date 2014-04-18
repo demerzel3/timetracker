@@ -1,4 +1,10 @@
 .task-details {
+  header {
+    display: block;
+    background-color: $toolbar-background-color;
+    border-top: solid 1px $separator-color;
+  }
+  
   h3 {
     margin: 0;
     font-size: 1.3em;
@@ -6,8 +12,6 @@
     font-weight: normal;
     padding-left: 45px;
     position: relative;
-    background-color: $toolbar-background-color;
-    border-top: solid 1px $separator-color;
     line-height: 1.4em;
     
     a {
@@ -23,6 +27,26 @@
       position: absolute;
       left: 15px;
       top: 15px;
+    }
+  }
+  
+  .timer-display {
+    font-size: 1.3em;
+    position: relative;
+    padding: 15px 0;
+    text-align: center;
+    
+    & > * {
+      position: relative;
+    }
+    
+    .task-progress {
+      position: absolute;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      width: 35%;
+      background-color: darken($toolbar-background-color, 4%);
     }
   }
 }

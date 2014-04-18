@@ -10,7 +10,7 @@ part of timetracker;
  * `null`, it is treated as equivalent to the empty string for rendering
  * purposes.
  */
-@NgDirective(selector: 'input[type=date][ng-model]')
+@Decorator(selector: 'input[type=date][ng-model]')
 class DateInputDirective {
   dom.InputElement inputElement;
   NgModel ngModel;

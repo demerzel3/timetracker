@@ -354,9 +354,9 @@ body, html {
   width: 96px;
   height: 96px;
   border-radius: 48px;
-  line-break: after;
   display: block;
   padding: 8px;
+  margin: 0 auto;
 }
 
 /* line 22, ../sass/theme/_Face.scss */
@@ -503,13 +503,78 @@ a.link-sm {
 }
 
 /* line 135, ../sass/theme/_Face.scss */
-.jumbotron-timer {
-  padding: 30px;
+.face.timer {
+  position: relative;
 }
-
-/* line 138, ../sass/theme/_Face.scss */
-.jumbotron-timer h1 {
-  margin: 0;
+/* line 137, ../sass/theme/_Face.scss */
+.face.timer button {
+  padding: 0;
+  position: absolute;
+  width: 64px;
+  height: 64px;
+  border-radius: 32px;
+  top: 0;
+  left: 50%;
+  margin-left: -32px;
+  color: white;
+  font-size: 1.5em;
+  background-color: transparent;
+}
+/* line 149, ../sass/theme/_Face.scss */
+.face.timer button i {
+  display: none;
+}
+/* line 152, ../sass/theme/_Face.scss */
+.face.timer button:focus {
+  outline: none;
+}
+/* line 157, ../sass/theme/_Face.scss */
+.face.timer button:hover i {
+  display: inline-block;
+}
+/* line 162, ../sass/theme/_Face.scss */
+.face.timer button:active i {
+  display: inline-block;
+}
+/* line 167, ../sass/theme/_Face.scss */
+.face.timer circular-progress-bar {
+  position: absolute;
+  height: 64px;
+  width: 64px;
+  left: 50%;
+  margin-left: -32px;
+  top: 0;
+}
+/* line 176, ../sass/theme/_Face.scss */
+.face.timer .counter {
+  font-size: 0.8em;
+}
+/* line 181, ../sass/theme/_Face.scss */
+.face.timer.timer-start button:hover {
+  background-color: rgba(92, 184, 92, 0.5);
+}
+/* line 182, ../sass/theme/_Face.scss */
+.face.timer.timer-start button:active {
+  background-color: rgba(92, 184, 92, 0.9);
+}
+/* line 183, ../sass/theme/_Face.scss */
+.face.timer.timer-start img {
+  padding: 2px;
+  border: solid 6px #5cb85c;
+}
+/* line 189, ../sass/theme/_Face.scss */
+.face.timer.timer-stop button {
+  height: 50px;
+  width: 50px;
+  border-radius: 25px;
+  top: 7px;
+  background-color: rgba(255, 255, 255, 0.8);
+  margin-left: -25px;
+  color: #3071a9;
+}
+/* line 199, ../sass/theme/_Face.scss */
+.face.timer.timer-stop button:hover span, .face.timer.timer-stop button:active span {
+  display: none;
 }
 
 /* line 1, ../sass/theme/_TasksList.scss */
@@ -643,6 +708,12 @@ a.link-sm {
 }
 
 /* line 2, ../sass/theme/_TaskDetails.scss */
+.task-details header {
+  display: block;
+  background-color: #f6f6f6;
+  border-top: solid 1px #dddddd;
+}
+/* line 8, ../sass/theme/_TaskDetails.scss */
 .task-details h3 {
   margin: 0;
   font-size: 1.3em;
@@ -650,27 +721,45 @@ a.link-sm {
   font-weight: normal;
   padding-left: 45px;
   position: relative;
-  background-color: #f6f6f6;
-  border-top: solid 1px #dddddd;
   line-height: 1.4em;
 }
-/* line 13, ../sass/theme/_TaskDetails.scss */
+/* line 17, ../sass/theme/_TaskDetails.scss */
 .task-details h3 a {
   color: black;
 }
-/* line 15, ../sass/theme/_TaskDetails.scss */
+/* line 19, ../sass/theme/_TaskDetails.scss */
 .task-details h3 a:hover {
   opacity: 0.6;
 }
-/* line 18, ../sass/theme/_TaskDetails.scss */
+/* line 22, ../sass/theme/_TaskDetails.scss */
 .task-details h3 a:active {
   opacity: 0.3;
 }
-/* line 22, ../sass/theme/_TaskDetails.scss */
+/* line 26, ../sass/theme/_TaskDetails.scss */
 .task-details h3 i {
   position: absolute;
   left: 15px;
   top: 15px;
+}
+/* line 33, ../sass/theme/_TaskDetails.scss */
+.task-details .timer-display {
+  font-size: 1.3em;
+  position: relative;
+  padding: 15px 0;
+  text-align: center;
+}
+/* line 39, ../sass/theme/_TaskDetails.scss */
+.task-details .timer-display > * {
+  position: relative;
+}
+/* line 43, ../sass/theme/_TaskDetails.scss */
+.task-details .timer-display .task-progress {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: 35%;
+  background-color: #ececec;
 }
 
 /* line 1, ../sass/theme/_TimingsTable.scss */

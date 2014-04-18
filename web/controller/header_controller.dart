@@ -1,6 +1,6 @@
 part of timetracker;
 
-@NgController(
+@Controller(
     selector: '[header-controller]',
     publishAs: 'ctrl')
 class HeaderController {

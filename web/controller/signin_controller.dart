@@ -6,7 +6,7 @@ class _Endpoint {
   _Endpoint(this.name, this.url);
 }
 
-@NgController(
+@Controller(
     selector: '[signin-controller]',
     publishAs: 'ctrl')
 class SigninController {

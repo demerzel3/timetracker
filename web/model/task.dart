@@ -21,7 +21,7 @@ class Task {
   EventStream<Timing> _timingAdded = new EventStream<Timing>();
   async.Stream<Timing> get timingAdded => _timingAdded.stream;
   
-  Duration _totalDuration;
+  Duration _totalDuration = new Duration();
   
   Task();
   

@@ -1,6 +1,6 @@
 part of timetracker;
 
-@NgController(
+@Controller(
     selector: '[test-controller]',
     publishAs: 'ctrl')
 class TestController {

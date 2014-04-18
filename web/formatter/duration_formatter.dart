@@ -1,7 +1,7 @@
 part of timetracker;
 
-@NgFilter(name: 'duration')
-class DurationFilter {
+@Formatter(name: 'duration')
+class DurationFormatter {
   var _formatter = new NumberFormat('0');
   var _formatter2 = new NumberFormat('00');
 

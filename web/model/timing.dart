@@ -54,6 +54,10 @@ class Timing {
     }
   }
   
+  int get durationSeconds {
+    return duration.inSeconds - duration.inMinutes*Duration.SECONDS_PER_MINUTE;
+  }
+  
   Map toJson() {
     return {
       'id': id,

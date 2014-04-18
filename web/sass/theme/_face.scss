@@ -14,9 +14,9 @@
   width: 96px;
   height: 96px;
   border-radius: 48px;
-  line-break: after;
   display: block;
   padding: 8px;
+  margin: 0 auto;
 }
 
 .header .face {
@@ -132,9 +132,70 @@ a.link-sm {
   opacity: 0.2;
 }
 
-.jumbotron-timer {
-  padding: 30px;
-}
-.jumbotron-timer h1 {
-  margin: 0;
+.face.timer {
+  position: relative;
+  button {
+    padding: 0;
+    position: absolute;
+    width: 64px;
+    height: 64px;
+    border-radius: 32px;
+    top: 0;
+    left: 50%;
+    margin-left: -32px;
+    color: white;
+    font-size: 1.5em;
+    background-color: transparent;
+    i {
+      display: none;
+    }
+    &:focus {
+      outline: none;
+    }
+  }
+  button:hover {
+    i {
+      display: inline-block;
+    }
+  }
+  button:active {
+    i {
+      display: inline-block;
+    }
+  }
+  
+  circular-progress-bar {
+    position: absolute;  
+    height: 64px;
+    width: 64px;
+    left: 50%;
+    margin-left: -32px;
+    top: 0;
+  }
+  
+  .counter {
+    font-size: 0.8em;    
+  }
+  
+  &.timer-start {
+    button:hover { background-color: rgba($success-color, 0.5); }
+    button:active { background-color: rgba($success-color, 0.9); }  
+    img {
+      padding: 2px;
+      border: solid 6px $success-color;
+    }
+  }
+  &.timer-stop {
+    button {
+      height: 50px;
+      width: 50px;
+      border-radius: 25px;
+      top: 7px;
+      background-color: rgba(white, 0.8);
+      margin-left: -25px;
+    
+      color: darken($primary-color, 10%);      
+    }
+    button:hover span, button:active span { display: none }
+  }
 }

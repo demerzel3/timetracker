@@ -1,9 +1,9 @@
 part of timetracker;
 
-@NgController(
+@Controller(
     selector: '[projects-controller]',
     publishAs: 'ctrl')
-class ProjectsController implements NgDetachAware {
+class ProjectsController implements DetachAware {
 
   Scope _scope;
   ProjectsClient _db;

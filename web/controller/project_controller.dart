@@ -1,15 +1,18 @@
 part of timetracker;
 
-@NgController(
+@Controller(
     selector: '[project-controller]',
     publishAs: 'ctrl')
-class ProjectController implements NgDetachAware {
+class ProjectController implements DetachAware {
 
+  num progress = 20;
+  
   ProjectsClient _db;
   Session _session;
   Modal _tasksBinModal;
   Scope _scope;
   
+  User loggedUser;
   List<User> users = User.defaultUsers();
   
   Project project;
@@ -34,6 +37,7 @@ class ProjectController implements NgDetachAware {
   
   ProjectController(this._db, this._session, this._scope, RouteProvider routeProvider) {
     _projectId = routeProvider.parameters['projectId'];
+    loggedUser = _session.user;
     
     // whenever activeTiming get changed, we start a timer that updates its duration
     _scope.watch('ctrl.activeTiming', (Timing _activeTiming, Timing oldActiveTiming) {
@@ -145,6 +149,14 @@ class ProjectController implements NgDetachAware {
     activeTiming.trackingActive = false;
     activeTiming = null;
     _saveProject();
+  }
+  
+  toggleTimer() {
+    if (activeTiming == null) {
+      startTimer();
+    } else if (selectedTask == activeTiming.task) {
+      stopTimer();
+    }
   }
   
   createNewTask() {
