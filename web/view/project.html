@@ -34,7 +34,7 @@
                      ng-model="ctrl.newTask.estimate" placeholder="h"/>
               <div grow="1"></div>
               <button shrink="0" ng-if="ctrl.newTask.name.length > 0" type="submit" class="btn btn-primary"> 
-                <i class="fa fa-plus"></i> Add
+                Add
               </button>                     
             </hflex>
           </vflex>
@@ -48,8 +48,8 @@
                  class="list-group-item selectable" draggable="true" layout="hflex">
               <strong class="index">{{$index+1}})</strong>
               <span class="task-name" grow="1">{{task.name}}</span>
-              <div class="task-weight" ng-style="{width: (task.weight*100)+'%'}"></div>
-              <div class="task-progress" ng-style="{width: (task.progress*task.weight*100)+'%'}"></div>              
+              <div class="task-weight" ng-style="{width: (task.weight*100).toStringAsFixed(2)+'%'}"></div>
+              <div class="task-progress" ng-style="{width: (task.progress*task.weight*100).toStringAsFixed(2)+'%'}"></div>              
               <span class="fa-stack timer" ng-if="ctrl.activeTiming != null && ctrl.activeTiming.task == task">
                 <i class="fa fa-circle-o fa-stack-1x"></i>
                 <i class="fa fa-circle fa-stack-1x"></i>
@@ -97,57 +97,18 @@
           </h3>
       
           <div class="timer-display">
-            <div class="task-progress" ng-style="{width: ctrl.selectedTask.progress*100+'%'}"></div>
-            <!--
-            <a class="pull-right btn btn-success btn-lg" style="margin-top: 9px" role="button" 
-               ng-click="ctrl.startTimer()">
-              <i class="fa fa-play"></i>&emsp;Start
-            </a>
-            -->
+            <div class="task-progress" ng-style="{width: (ctrl.selectedTask.progress*100).toStringAsFixed(2)+'%'}"></div>
             <div>
               <i class="fa fa-clock-o"></i>
               {{ctrl.selectedTask.totalDuration|duration:'h:mm|&minus;'}}
               <span class="estimate" ng-if="ctrl.selectedTask.estimate != null">/ {{ctrl.selectedTask.estimate|floor}}:00</span>
             </div>                  
           </div>
-          
-          
-          <!--
-          <div class="text-center">          
-            <div class="face inline">
-              <img ng-src="{{ctrl.loggedUser.avatarUrl}}"/>
-            </div>
-            <button type="button" class="btn btn-primary btn-sm" style="margin-top: 9px" 
-               ng-click="ctrl.startTimer()">
-              <i class="fa fa-play"></i>&emsp;Start working on this
-            </button>
-          </div>
-          -->
-          
         </header>
-      
-        <!--
-        <div class="jumbotron jumbotron-timer" ng-if="ctrl.activeTiming == null">
-          <a class="pull-right btn btn-success btn-lg" style="margin-top: 9px" role="button" 
-             ng-click="ctrl.startTimer()">
-            <i class="fa fa-play"></i>&emsp;Start
-          </a>
-          <h1>00:00:00</h1>        
-        </div>
-        -->      
-      
-        <!--
-        <div class="jumbotron jumbotron-timer" ng-if="ctrl.activeTiming != null && ctrl.activeTiming.task == ctrl.selectedTask">
-          <a class="pull-right btn btn-danger btn-lg" style="margin-top: 9px" role="button"
-             ng-click="ctrl.stopTimer()">
-            <i class="fa fa-stop"></i>&emsp;Stop
-          </a>
-          <h1>{{ctrl.activeTiming.duration|duration:'hh:mm:ss'}}</h1>
-        </div>
-        -->
       
         <table class="table timings-table">
           <thead>
+            <!--
             <tr>
               <th></th>
               <th ng-repeat="user in ctrl.users" class="text-center" ng-init>
@@ -156,7 +117,7 @@
                   <circular-progress-bar ng-if="user == ctrl.loggedUser && ctrl.activeTiming != null && ctrl.activeTiming.task == ctrl.selectedTask"
                     ng-model="ctrl.activeTiming.durationSeconds/60"></circular-progress-bar>
                   
-                  <button class="btn" ng-if="user == ctrl.loggedUser" ng-click="ctrl.toggleTimer()" tabindex="-1">
+                  <button class="btn" ng-if="user == ctrl.loggedUser" ng-click="ctrl.toggleTimer()">
                     <i class="fa fa-play" ng-if="ctrl.activeTiming == null"></i>
                     <i class="fa fa-pause" ng-if="ctrl.activeTiming != null && ctrl.activeTiming.task == ctrl.selectedTask"></i>
                     <span class="counter" ng-if="ctrl.activeTiming != null && ctrl.activeTiming.task == ctrl.selectedTask">{{ctrl.activeTiming.duration|duration:'h:mm'}}</span>
@@ -168,9 +129,43 @@
                 
               </th>
             </tr>
+            -->
+            
+            <tr>
+              <th></th>
+              <th ng-repeat="userVm in ctrl.projectView.users" class="text-center" ng-init>
+                <div class="face inline timer" ng-if="userVm.user == ctrl.loggedUser"
+                     ng-class="{
+                        'timer-start': userVm.activeTiming == null, 
+                        'timer-stop': userVm.activeTiming != null && userVm.activeTiming.task == ctrl.selectedTask}">
+                  <circular-progress-bar ng-if="userVm.activeTiming != null && userVm.activeTiming.task == ctrl.selectedTask"
+                    ng-model="userVm.activeTiming.durationSeconds/60"></circular-progress-bar>
+                  
+                  <button class="btn" ng-click="ctrl.toggleTimer()">
+                    <i class="fa fa-play" ng-if="userVm.activeTiming == null"></i>
+                    <i class="fa fa-pause" ng-if="userVm.activeTiming != null && userVm.activeTiming.task == ctrl.selectedTask"></i>
+                    <span class="counter" ng-if="userVm.activeTiming != null && userVm.activeTiming.task == ctrl.selectedTask">{{userVm.activeTiming.duration|duration:'h:mm'}}</span>
+                  </button>
+                  
+                  <img ng-src="{{userVm.user.avatarUrl}}"/>
+                  {{userVm.user.name}}
+                </div>
+
+                <div class="face inline timer" ng-if="userVm.user != ctrl.loggedUser"
+                     ng-class="{'timer-view': userVm.activeTiming != null && userVm.activeTiming.task == ctrl.selectedTask}">
+                  <circular-progress-bar ng-if="userVm.activeTiming != null && userVm.activeTiming.task == ctrl.selectedTask"
+                    ng-model="userVm.activeTiming.durationSeconds/60" stroke-color="#ddd"></circular-progress-bar>
+                  
+                  <span class="counter" ng-if="userVm.activeTiming != null && userVm.activeTiming.task == ctrl.selectedTask">{{userVm.activeTiming.duration|duration:'h:mm'}}</span>
+                  
+                  <img ng-src="{{userVm.user.avatarUrl}}"/>
+                  {{userVm.user.name}}
+                </div>                
+              </th>
+            </tr>
           </thead>
           <tbody>
-            <tr ng-repeat="day in ctrl.selectedTaskTimeline.days">
+            <tr ng-repeat="day in ctrl.selectedTaskView.days">
               <td>{{day.day|date:'dd/MM/yyyy'}}</td>
               <td ng-repeat="userDuration in day.users" class="text-center">
                 {{ userDuration.duration|duration:'hh:mm|&minus;' }}
@@ -244,7 +239,7 @@
             <div class="col-sm-12 text-right">
               <button type="submit" class="btn btn-primary"
                       ng-focus="ctrl.timingInputFocusIn()" ng-blur="ctrl.timingInputFocusOut()">
-                <i class="fa fa-plus"></i> Add
+                Add
               </button>
             </div>
           </div>                        

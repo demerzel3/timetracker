@@ -576,6 +576,10 @@ a.link-sm {
 .face.timer.timer-stop button:hover span, .face.timer.timer-stop button:active span {
   display: none;
 }
+/* line 202, ../sass/theme/_Face.scss */
+.face.timer.timer-view .counter {
+  display: none;
+}
 
 /* line 1, ../sass/theme/_TasksList.scss */
 .tasks-list {

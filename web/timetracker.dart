@@ -40,7 +40,9 @@ part 'model/project.dart';
 part 'model/task.dart';
 part 'model/timing.dart';
 part 'model/user.dart';
-part 'model/task_timeline.dart';
+
+part 'view_model/project_view_model.dart';
+part 'view_model/task_view_model.dart';
 
 part 'service/session.dart';
 

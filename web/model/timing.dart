@@ -1,13 +1,12 @@
 part of timetracker; 
 
 class Timing {
-  //DateFormat _formatter = new DateFormat('dd/MM/yyyy');
-  
   String id;
   User user;
   DateTime date = new DateTime.now(); // data a cui si riferisce il lavoro
   Duration duration; // = new Duration(); // durata del lavoro (0 di default)
-  bool trackingActive = false; // true if we are tracking the duration of this timing in real time
+  bool _trackingActive = false; // true if we are tracking the duration of this timing in real time
+  
   /**
    * Parent task
    */
@@ -17,6 +16,8 @@ class Timing {
   
   EventStream<ChangeEvent<Duration>> _durationChanged = new EventStream<ChangeEvent<Duration>>();
   async.Stream<ChangeEvent<Duration>> get durationChanged => _durationChanged.stream; 
+  EventStream<ChangeEvent<bool>> _trackingActiveChanged = new EventStream<ChangeEvent<bool>>();
+  async.Stream<ChangeEvent<bool>> get trackingActiveChanged => _trackingActiveChanged.stream;
   
   Timing.fromJson(Map raw) {
     id = raw['id'];
@@ -30,7 +31,7 @@ class Timing {
         seconds: raw['duration']['seconds'] != null ? raw['duration']['seconds'] : 0
     );
     if (raw.containsKey('trackingActive')) {
-      trackingActive = raw['trackingActive'];
+      _trackingActive = raw['trackingActive'];
     }
   }
   
@@ -54,6 +55,15 @@ class Timing {
     }
   }
   
+  bool get trackingActive => _trackingActive;
+  set trackingActive(bool value) {
+    if (value == _trackingActive) {
+      return;
+    }
+    _trackingActive = value;
+    _trackingActiveChanged.signal(new ChangeEvent<bool>(value, !value));
+  }
+  
   int get durationSeconds {
     return duration.inSeconds - duration.inMinutes*Duration.SECONDS_PER_MINUTE;
   }
@@ -71,7 +81,7 @@ class Timing {
         'minutes': duration.inMinutes-duration.inHours*Duration.MINUTES_PER_HOUR,
         'seconds': duration.inSeconds-duration.inMinutes*Duration.SECONDS_PER_MINUTE
       },
-      'trackingActive': trackingActive
+      'trackingActive': _trackingActive
     };
   }  
 }

@@ -16,11 +16,13 @@ class ProjectController implements DetachAware {
   List<User> users = User.defaultUsers();
   
   Project project;
+  ProjectViewModel projectView;
+  // TODO: insert activeTasks and completedTasks into ProjectViewModel
   List<Task> activeTasks;
   List<Task> completedTasks;
   
   Task selectedTask;
-  TaskTimeline selectedTaskTimeline;
+  TaskViewModel selectedTaskView;
   
   bool completedTasksVisible = false;
   
@@ -40,6 +42,7 @@ class ProjectController implements DetachAware {
     loggedUser = _session.user;
     
     // whenever activeTiming get changed, we start a timer that updates its duration
+    /*
     _scope.watch('ctrl.activeTiming', (Timing _activeTiming, Timing oldActiveTiming) {
       print('Active timing changed to '+ (_activeTiming == null ? 'null' : _activeTiming.id));
       if (durationUpdateTimer != null) {
@@ -55,15 +58,35 @@ class ProjectController implements DetachAware {
         project.updateTotalDuration();
       });
     });
+    */
+    durationUpdateTimer = new async.Timer.periodic(new Duration(seconds: 1), (async.Timer timer) {
+      if (projectView == null) {
+        return;
+      }
+      
+      var somethingUpdated = false;
+      for (UserProjectViewModel userView in projectView.users) {
+        if (userView.activeTiming != null) {
+          somethingUpdated = true;
+          userView.activeTiming.updateDuration(new DateTime.now());
+        }
+      }
+      if (somethingUpdated) {
+        // update the total duration of the project based on the new timing duration
+        // this won't be necessary in the future
+        project.updateTotalDuration();
+      }
+    });
+    
         
     _pollForChanges(seq: 0); 
   }
   
   void detach() {
     // cleanup Timeline
-    if (selectedTaskTimeline != null) {
-      selectedTaskTimeline.detach();
-      selectedTaskTimeline = null;
+    if (selectedTaskView != null) {
+      selectedTaskView.detach();
+      selectedTaskView = null;
     }
     // cleanup duration update timer
     if (durationUpdateTimer != null) {
@@ -80,6 +103,10 @@ class ProjectController implements DetachAware {
       }
       
       project = changedProjects[0];
+      if (projectView != null) {
+        projectView.detach();
+      }
+      projectView = new ProjectViewModel(project);
       print(project.name + " updated");
       
       // restore activeTiming for the current user and update the total immediately
@@ -278,12 +305,12 @@ class ProjectController implements DetachAware {
     }
     
     selectedTask = task;
-    if (selectedTaskTimeline != null) {
-      selectedTaskTimeline.detach();
-      selectedTaskTimeline = null;
+    if (selectedTaskView != null) {
+      selectedTaskView.detach();
+      selectedTaskView = null;
     }
     if (task != null) {
-      selectedTaskTimeline = new TaskTimeline(task);
+      selectedTaskView = new TaskViewModel(task);
     }
   }
   

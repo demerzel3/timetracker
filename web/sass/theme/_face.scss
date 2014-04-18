@@ -198,4 +198,9 @@ a.link-sm {
     }
     button:hover span, button:active span { display: none }
   }
+  &.timer-view {
+    .counter {
+      display: none;
+    }
+  }
 }
